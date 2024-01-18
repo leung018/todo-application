@@ -1,0 +1,5 @@
+{
+  "name": "frontend",
+  "packageManager": "yarn@4.0.2",
+  "private": true
+}
