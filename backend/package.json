@@ -5,11 +5,13 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "lint": "eslint src",
+    "ts:check": "tsc --noEmit",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:ci": "jest --ci"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
