@@ -1,8 +1,8 @@
-import express from 'express'
+import express, { Express } from 'express'
 import { DutiesRouteService } from './route/duties'
 
 export class ExpressAppInitializer {
-  readonly app
+  readonly app: Express
 
   static createNull() {
     return new ExpressAppInitializer({
