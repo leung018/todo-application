@@ -4,6 +4,12 @@ import { DutiesRouteService } from './route/duties'
 export class ExpressAppInitializer {
   readonly app: Express
 
+  static create() {
+    return new ExpressAppInitializer({
+      dutiesRouteService: DutiesRouteService.create(),
+    })
+  }
+
   static createNull() {
     return new ExpressAppInitializer({
       dutiesRouteService: DutiesRouteService.createNull(),
