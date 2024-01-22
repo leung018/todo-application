@@ -8,6 +8,12 @@ export class DutiesRouteService implements RouteService {
 
   private dutyRepository: DutyRepository
 
+  static create() {
+    return new DutiesRouteService({
+      dutyRepository: new InMemoryDutyRepository(), // TODO: Use a real repository
+    })
+  }
+
   static createNull() {
     return new DutiesRouteService({
       dutyRepository: new InMemoryDutyRepository(),
