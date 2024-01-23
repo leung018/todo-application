@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 /.pnp
-.pnp.js
+.pnp.*
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -16,7 +16,6 @@
 # Documentation here: https://yarnpkg.com/features/caching#zero-installs
 
 #!.yarn/cache
-.pnp.*
 
 
 # testing
