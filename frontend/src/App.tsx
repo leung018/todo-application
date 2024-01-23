@@ -1,24 +1,40 @@
-import React from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { List, Input, Button, Typography } from 'antd'
+import { CheckOutlined, EditOutlined } from '@ant-design/icons'
 
-function App() {
+const { Text, Title } = Typography
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ margin: '24px auto', maxWidth: '600px' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <Input placeholder="Add new duty" style={{ width: '100%' }} />
+        <Button type="primary" style={{ marginTop: '5px' }}>
+          Add
+        </Button>
+      </div>
+      <List
+        header={<Title level={4}>Duties List</Title>}
+        bordered
+        dataSource={[{ id: 'dummy-id', name: 'Sample Duty' }]}
+        renderItem={(item) => (
+          <List.Item
+            actions={[
+              <Button
+                shape="circle"
+                icon={<EditOutlined />}
+                onClick={() => {}}
+              />,
+              <Button
+                shape="circle"
+                icon={<CheckOutlined />}
+                onClick={() => {}}
+              />,
+            ]}
+          >
+            <Text>{item.name}</Text>
+          </List.Item>
+        )}
+      />
     </div>
   )
 }
