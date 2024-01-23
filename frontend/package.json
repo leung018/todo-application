@@ -21,6 +21,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "eject": "react-scripts eject"
   },
   "browserslist": {
