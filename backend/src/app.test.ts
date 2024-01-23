@@ -3,7 +3,7 @@ import request from 'supertest'
 import { ExpressAppInitializer } from './app'
 import { Express } from 'express'
 
-describe('ExpressApp', () => {
+describe('API', () => {
   let app: Express
 
   beforeEach(() => {
