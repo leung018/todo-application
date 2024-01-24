@@ -6879,7 +6879,6 @@ __metadata:
     antd: "npm:^5.13.2"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^9.1.0"
-    eslint-config-react-app: "npm:^7.0.1"
     prettier: "npm:^3.2.4"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
