@@ -1,9 +1,24 @@
-import React from 'react'
 import { render, screen } from '@testing-library/react'
 import App from './App'
 
-test('renders learn react link', () => {
-  render(<App />)
-  const linkElement = screen.getByText(/learn react/i)
-  expect(linkElement).toBeInTheDocument()
+describe('App', () => {
+  beforeAll(() => {
+    // Ref: https://github.com/ant-design/ant-design/issues/21096#issuecomment-732368647
+    Object.defineProperty(window, 'matchMedia', {
+      value: () => {
+        return {
+          matches: false,
+          addListener: () => {},
+          removeListener: () => {},
+        }
+      },
+    })
+  })
+
+  it('dummy test', () => {
+    // Just check the jest is working. This test will be removed.
+    render(<App />)
+    const element = screen.getByText('Duties List')
+    expect(element).toBeInTheDocument()
+  })
 })
