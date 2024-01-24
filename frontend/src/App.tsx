@@ -1,6 +1,7 @@
 import { List, Input, Button, Typography } from 'antd'
 import { CheckOutlined, EditOutlined } from '@ant-design/icons'
-import { DutyRemoteService } from './services/duty'
+import { Duty, DutyRemoteService } from './services/duty'
+import { useEffect, useState } from 'react'
 
 const { Text, Title } = Typography
 
@@ -9,6 +10,14 @@ const App = ({
 }: {
   dutyRemoteService: DutyRemoteService
 }) => {
+  const [duties, setDuties] = useState<Duty[]>([])
+
+  useEffect(() => {
+    dutyRemoteService.listDuties().then((duties) => {
+      setDuties(duties)
+    })
+  })
+
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       <div style={{ marginBottom: '24px' }}>
@@ -20,7 +29,7 @@ const App = ({
       <List
         header={<Title level={4}>Duties List</Title>}
         bordered
-        dataSource={[{ id: 'dummy-id', name: 'Sample Duty' }]}
+        dataSource={duties}
         renderItem={(item) => (
           <List.Item
             actions={[

@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import App from './App'
+import { InMemoryDutyService } from './services/duty'
 
 describe('App', () => {
   beforeAll(() => {
@@ -15,10 +16,13 @@ describe('App', () => {
     })
   })
 
-  it('dummy test', () => {
-    // Just check the jest is working. This test will be removed.
-    render(<App />)
-    const element = screen.getByText('Duties List')
-    expect(element).toBeInTheDocument()
+  it('should display created duties', async () => {
+    const dutyRemoteService = new InMemoryDutyService()
+    await dutyRemoteService.createDuty('Sample Duty 1')
+    await dutyRemoteService.createDuty('Sample Duty 2')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+    await waitFor(() => screen.findByText('Sample Duty 1'))
+    screen.getByText('Sample Duty 2')
   })
 })
