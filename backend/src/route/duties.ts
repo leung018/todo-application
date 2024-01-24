@@ -30,7 +30,7 @@ export class DutiesRouteService implements RouteService {
   private createDuty = async (req: Request, res: Response) => {
     const duty = DutyFactory.createDuty({ name: req.body.name })
     await this.dutyRepository.create(duty)
-    res.status(201).send()
+    res.status(201).send(duty)
   }
 
   private listDuties = async (req: Request, res: Response) => {

@@ -10,6 +10,12 @@ describe('API', () => {
     app = ExpressAppInitializer.createNull().app
   })
 
+  it('should return back duty tend to create', async () => {
+    const duty = await createDuty({ name: 'My Duty' })
+    expect(duty.name).toBe('My Duty')
+    expect(typeof duty.id).toBe('string')
+  })
+
   it('should create single duty and list it', async () => {
     await createDuty({ name: 'My Duty' })
 
@@ -34,6 +40,7 @@ describe('API', () => {
   async function createDuty({ name = 'Name of Duty' } = {}) {
     const response = await request(app).post('/duties').send({ name })
     expect(response.status).toBe(201)
+    return response.body
   }
 
   async function listDuties() {
