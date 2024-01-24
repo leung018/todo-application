@@ -17,12 +17,11 @@ describe('API', () => {
   })
 
   it('should create single duty and list it', async () => {
-    await createDuty({ name: 'My Duty' })
+    const createdDuty = await createDuty({ name: 'My Duty' })
 
-    const duties = await listDuties()
-    expect(duties.length).toBe(1)
-    expect(duties[0].name).toBe('My Duty')
-    expect(typeof duties[0].id).toBe('string')
+    const listedDuties = await listDuties()
+    expect(listedDuties.length).toBe(1)
+    expect(listedDuties[0]).toEqual(createdDuty)
   })
 
   it('should create multiple duties and list them', async () => {
