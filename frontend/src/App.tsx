@@ -1,9 +1,14 @@
 import { List, Input, Button, Typography } from 'antd'
 import { CheckOutlined, EditOutlined } from '@ant-design/icons'
+import { DutyRemoteService } from './services/duty'
 
 const { Text, Title } = Typography
 
-const App = () => {
+const App = ({
+  dutyRemoteService,
+}: {
+  dutyRemoteService: DutyRemoteService
+}) => {
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       <div style={{ marginBottom: '24px' }}>

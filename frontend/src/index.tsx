@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import { DutyRemoteServiceImpl } from './services/duty'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+const dutyRemoteService = new DutyRemoteServiceImpl({ apiEndpoint: 'TODO' }) // TODO: Pass real API URL
 root.render(
   <React.StrictMode>
-    <App />
+    <App dutyRemoteService={dutyRemoteService} />
   </React.StrictMode>,
 )
 
