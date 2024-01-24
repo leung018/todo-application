@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import App from './App'
 import { InMemoryDutyService } from './services/duty'
 
@@ -24,5 +24,29 @@ describe('App', () => {
     render(<App dutyRemoteService={dutyRemoteService} />)
     await waitFor(() => screen.findByText('Sample Duty 1'))
     screen.getByText('Sample Duty 2')
+  })
+
+  it('should create new duty', async () => {
+    const dutyRemoteService = new InMemoryDutyService()
+    await dutyRemoteService.createDuty('Initial Duty')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+    // If not wait for this and add new duty directly, the test can't cover the behavior of displaying new duty
+    // because the useEffect hook may be triggered after the add button is clicked.
+    await waitFor(() => screen.findByText('Initial Duty'))
+
+    const input = screen.getByPlaceholderText('Add new duty')
+    fireEvent.change(input, { target: { value: 'New Duty' } })
+
+    const addButton = screen.getByText('Add')
+    fireEvent.click(addButton)
+
+    // New Duty should be displayed
+    await waitFor(() => screen.findByText('New Duty'))
+
+    // New Duty should be saved
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(2)
+    expect(savedDuties[1].name).toEqual('New Duty')
   })
 })

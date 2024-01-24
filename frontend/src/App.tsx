@@ -22,7 +22,15 @@ const App = ({
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       <div style={{ marginBottom: '24px' }}>
         <Input placeholder="Add new duty" style={{ width: '100%' }} />
-        <Button type="primary" style={{ marginTop: '5px' }}>
+        <Button
+          type="primary"
+          style={{ marginTop: '5px' }}
+          onClick={() => {
+            dutyRemoteService.createDuty('New Duty').then((duty) => {
+              setDuties([...duties, duty])
+            })
+          }}
+        >
           Add
         </Button>
       </div>
