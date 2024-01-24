@@ -44,8 +44,8 @@ jobs:
       - run: yarn install --immutable
       - name: Linting
         run: yarn lint
-      # - name: Type checking # TODO: don't know why this step is not working in CI. But it works locally. See https://github.com/leung018/todo-toy-project/actions/runs/7623355923/job/20763232165
-      #   run: yarn ts:check
+      - name: Type checking
+        run: yarn ts:check
       - name: Check formatting
         run: yarn format:check
       - name: Run unit tests
