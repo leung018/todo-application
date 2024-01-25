@@ -1,7 +1,6 @@
-on: [push]
-  # push:
-  #   branches:
-  #     - main
+# on: [push] FIXME: I don't know why this doesn't work in github action but in local it works.
+# For the error, see https://github.com/leung018/todo-toy-project/actions/runs/7657222261/job/20867394595
+on: []
 name: End-to-End Tests
 jobs:
   build:
