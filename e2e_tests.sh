@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker compose build
-docker compose run e2e_tests
+docker compose --env-file e2e.env build
+docker compose --env-file e2e.env run e2e_tests
 docker compose down
