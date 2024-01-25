@@ -2,7 +2,7 @@ include:
   - backend/docker-compose.yml
   - frontend/docker-compose.yml
 services:
-  e2e_test:
+  e2e_tests:
     image: cypress/included:13.6.3
     working_dir: /e2e
     volumes:
