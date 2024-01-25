@@ -1,0 +1,14 @@
+on: [push]
+  # push:
+  #   branches:
+  #     - main
+name: End-to-End Tests
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Docker Compose Build
+        run: docker compose build
+      - name: Run e2e_test
+        run: docker compose run e2e_test
