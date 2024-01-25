@@ -16,7 +16,7 @@ const App = ({
     dutyRemoteService.listDuties().then((duties) => {
       setDuties(duties)
     })
-  })
+  }, [dutyRemoteService])
 
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
