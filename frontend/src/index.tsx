@@ -7,8 +7,8 @@ import { DutyRemoteServiceImpl } from './services/duty'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 const dutyRemoteService = new DutyRemoteServiceImpl({
-  apiEndpoint: 'http://localhost:3001',
-}) // TODO: Pass real API URL
+  apiEndpoint: 'http://localhost:3001', // TODO: Use env variable
+})
 root.render(
   <React.StrictMode>
     <App dutyRemoteService={dutyRemoteService} />
