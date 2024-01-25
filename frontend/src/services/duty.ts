@@ -8,7 +8,6 @@ export interface Duty {
   name: string
 }
 
-// TODO: Test below class through e2e test
 export class DutyRemoteServiceImpl implements DutyRemoteService {
   private readonly apiEndpoint: string
 
