@@ -11,22 +11,31 @@ const App = ({
   dutyRemoteService: DutyRemoteService
 }) => {
   const [duties, setDuties] = useState<Duty[]>([])
+  const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
     dutyRemoteService.listDuties().then((duties) => {
       setDuties(duties)
     })
-  })
+  }, [dutyRemoteService])
 
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <Input placeholder="Add new duty" style={{ width: '100%' }} />
+        <Input
+          placeholder="Add new duty"
+          style={{ width: '100%' }}
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value)
+          }}
+        />
         <Button
           type="primary"
           style={{ marginTop: '5px' }}
           onClick={() => {
-            dutyRemoteService.createDuty('New Duty').then((duty) => {
+            dutyRemoteService.createDuty(inputValue).then((duty) => {
+              setInputValue('')
               setDuties([...duties, duty])
             })
           }}
