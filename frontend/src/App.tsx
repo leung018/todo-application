@@ -35,6 +35,7 @@ const App = ({
           style={{ marginTop: '5px' }}
           onClick={() => {
             dutyRemoteService.createDuty(inputValue).then((duty) => {
+              setInputValue('')
               setDuties([...duties, duty])
             })
           }}

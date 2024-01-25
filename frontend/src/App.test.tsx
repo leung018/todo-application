@@ -41,6 +41,11 @@ describe('App', () => {
     const addButton = screen.getByText('Add')
     fireEvent.click(addButton)
 
+    // Input should be cleared
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Add new duty')).toHaveValue('')
+    })
+
     // New Duty should be displayed
     await waitFor(() => screen.findByText('New Duty'))
 
