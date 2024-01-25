@@ -20,6 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "test": "react-scripts test --watchAll=false",
     "test:watch": "react-scripts test",
     "test:ci": "CI=true react-scripts test",
     "ts:check": "tsc --noEmit",
