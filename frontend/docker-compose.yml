@@ -1,0 +1,12 @@
+version: '3'
+services:
+  frontend:
+    environment:
+      - PORT=${FRONTEND_PORT}
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_ENDPOINT=${REACT_APP_API_ENDPOINT}
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
