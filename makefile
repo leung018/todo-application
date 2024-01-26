@@ -1,4 +1,4 @@
-run: # Build and run the application
+build-and-run: # Build and run the application
 	docker compose up --build frontend backend -d
 e2e:
 	docker compose --env-file e2e.env build
