@@ -1,4 +1,7 @@
-on: [push] # TODO: Better not run this on every push but for debug purpose, leave it for now.
+on:
+  push:
+    branches:
+      - main
 name: End-to-End Tests
 jobs:
   build:
