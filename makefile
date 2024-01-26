@@ -5,6 +5,7 @@ e2e-tests:
 local-install: # Install dependencies for local development
 	cd frontend && yarn install
 	cd backend && yarn install
+	cd e2e && yarn install
 backend-dev:
 	cd backend && yarn dev
 frontend-dev:
