@@ -12,7 +12,8 @@
     "format:check": "prettier --check .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci",
+    "integration-test": "jest --testMatch \"**/*.integration.ts\""
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
