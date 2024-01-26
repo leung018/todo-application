@@ -2,7 +2,7 @@ include:
   - backend/docker-compose.yml
   - frontend/docker-compose.yml
 services:
-  e2e_tests:
+  e2e_tests: # Please use e2e_tests.sh to run the tests instead of docker compose directly
     image: cypress/included:13.6.3
     working_dir: /e2e
     volumes:
@@ -10,4 +10,4 @@ services:
     depends_on:
       - frontend
       - backend
-    entrypoint: cypress run --e2e --config baseUrl=${CYPRESS_BASE_URL}
+    entrypoint: cypress run --e2e --config baseUrl=${CYPRESS_BASE_URL:-PLEASE_SET_CYPRESS_BASE_URL}
