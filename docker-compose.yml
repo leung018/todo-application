@@ -6,7 +6,7 @@ services:
     image: cypress/included:13.6.3
     working_dir: /e2e
     volumes:
-      - ./frontend:/e2e
+      - ./e2e:/e2e
     depends_on:
       - frontend
       - backend
