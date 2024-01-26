@@ -1,7 +1,16 @@
-import { describe, it, expect } from '@jest/globals'
+import { describe, it } from '@jest/globals'
+import postgres from 'postgres'
 
 describe('PostgresDutyRepository', () => {
-  it('dummy test to test this file can be run', () => {
-    expect(true).toBe(true)
+  it('should connect postgres client', async () => {
+    // TODO: will remove this test later
+    const sql = postgres({
+      host: 'localhost',
+      port: 5432,
+      database: 'admin',
+      username: 'admin',
+      password: 'mypassword',
+    })
+    await sql`SELECT 1`
   })
 })
