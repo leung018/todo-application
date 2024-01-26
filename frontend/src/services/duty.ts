@@ -1,11 +1,8 @@
+import { Duty } from '../models/duty'
+
 export interface DutyRemoteService {
   createDuty: (name: string) => Promise<Duty>
   listDuties(): Promise<Duty[]>
-}
-
-export interface Duty {
-  readonly id: string
-  name: string
 }
 
 export class DutyRemoteServiceImpl implements DutyRemoteService {

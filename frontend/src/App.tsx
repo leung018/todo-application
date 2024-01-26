@@ -1,6 +1,7 @@
 import { List, Input, Button, Typography } from 'antd'
 import { CheckOutlined, EditOutlined } from '@ant-design/icons'
-import { Duty, DutyRemoteService } from './services/duty'
+import { DutyRemoteService } from './services/duty'
+import { Duty } from './models/duty'
 import { useEffect, useState } from 'react'
 
 const { Text, Title } = Typography
