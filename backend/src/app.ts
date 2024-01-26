@@ -1,5 +1,6 @@
 import express, { Express, NextFunction, Request, Response } from 'express'
 import { DutiesRouteService } from './route/duties'
+import morgan from 'morgan'
 
 export class ExpressAppInitializer {
   readonly app: Express
@@ -30,6 +31,7 @@ export class ExpressAppInitializer {
   }
 
   private setPreRoutingMiddlewares() {
+    this.app.use(morgan('tiny'))
     this.app.use(allowCors)
     this.app.use(express.json())
   }
