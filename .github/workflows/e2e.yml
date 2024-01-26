@@ -2,14 +2,15 @@ on:
   push:
     branches:
       - main
-name: End-to-End Tests # TODO: Perhaps optimize by non docker-compose build. Post Run of below caching action is quite slow.
+name: End-to-End Tests # TODO: Perhaps optimize by non docker-compose build.
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
+      # Tried to use below action but seems slow.
+      # - uses: satackey/action-docker-layer-caching@v0.0.11
+      #   continue-on-error: true
       - name: Docker Compose Build
         run: docker compose --env-file e2e.env build
       - name: Run End-to-End Tests
