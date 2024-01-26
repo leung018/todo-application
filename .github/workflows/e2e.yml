@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - main
-name: End-to-End Tests
+name: End-to-End Tests # TODO: Perhaps optimize by non docker-compose build. Post Run of below caching action is quite slow.
 jobs:
   build:
     runs-on: ubuntu-latest
