@@ -47,8 +47,7 @@ describe('App', () => {
     })
 
     // New Duty should be displayed
-    // FIXME: Below assertion failed but I don't know why. The dom printed contains the text 'New Duty' and e2e test passed.
-    // expect(await screen.findByText('New Duty')).toBeVisible()
+    expect(await screen.findByText('New Duty')).toBeVisible()
 
     // New Duty should be saved
     const savedDuties = await dutyRemoteService.listDuties()
