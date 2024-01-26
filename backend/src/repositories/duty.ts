@@ -66,4 +66,8 @@ export class PostgresDutyRepository implements DutyRepository {
       name: 'dummy',
     }
   }
+
+  close() {
+    return this.sql.end()
+  }
 }
