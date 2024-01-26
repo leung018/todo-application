@@ -1607,6 +1607,7 @@ __metadata:
     jest: "npm:^29.7.0"
     morgan: "npm:^1.10.0"
     nodemon: "npm:^3.0.3"
+    postgres: "npm:^3.4.3"
     prettier: "npm:^3.2.4"
     supertest: "npm:^6.3.4"
     ts-jest: "npm:^29.1.1"
@@ -4454,6 +4455,13 @@ __metadata:
   dependencies:
     find-up: "npm:^4.0.0"
   checksum: 9863e3f35132bf99ae1636d31ff1e1e3501251d480336edb1c211133c8d58906bed80f154a1d723652df1fda91e01c7442c2eeaf9dc83157c7ae89087e43c8d6
+  languageName: node
+  linkType: hard
+
+"postgres@npm:^3.4.3":
+  version: 3.4.3
+  resolution: "postgres@npm:3.4.3"
+  checksum: 13603374a0f3fcc228f69fb7db64f9faaf42ad9eb6df8a76632162b0bbbe78e30a22b4b7c8b4dcc80275502b42c9b053bf9defbe5898358c84909ff8ad620225
   languageName: node
   linkType: hard
 
