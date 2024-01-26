@@ -5,3 +5,8 @@ e2e-tests:
 local-install: # Install dependencies for local development
 	cd frontend && yarn install
 	cd backend && yarn install
+backend-dev:
+	cd backend && yarn dev
+e2e-dev: # Start backend first by backend-dev first
+	cd frontend && yarn dev&
+	cd e2e && yarn cypress open
