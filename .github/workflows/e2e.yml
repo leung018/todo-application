@@ -1,16 +1,13 @@
-# FIXME: I don't know why this doesn't work in github action but in local it works.
-# For the error, see https://github.com/leung018/todo-toy-project/actions/runs/7657222261/job/20867394595
-
-# on: [push] # TODO: Better not run this on every push but for debug purpose, leave it for now.
-# name: End-to-End Tests
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - uses: satackey/action-docker-layer-caching@v0.0.11
-#         continue-on-error: true
-#       - name: Docker Compose Build
-#         run: docker compose build
-#       - name: Run e2e_test
-#         run: docker compose run e2e_test
+on: [push] # TODO: Better not run this on every push but for debug purpose, leave it for now.
+name: End-to-End Tests
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+      - name: Docker Compose Build
+        run: docker compose --env-file e2e.env build
+      - name: Run End-to-End Tests
+        run: docker compose --env-file e2e.env run e2e_tests
