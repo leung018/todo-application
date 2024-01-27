@@ -7,9 +7,8 @@ local-install: # Install dependencies for local development
 	cd backend && yarn install
 	cd e2e && yarn install
 backend-dev:
-	cd backend && yarn dev
+	cd backend && make dev-with-db
 frontend-dev:
 	cd frontend && yarn dev
-e2e-dev: # Run `make backend-dev` in separate terminal first.
-	frontend-dev &
+e2e-dev: # Run `make backend-dev` and `make frontend-dev` in separate terminals first.
 	cd e2e && yarn cypress open
