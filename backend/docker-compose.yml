@@ -1,12 +1,15 @@
 version: '3'
 services:
   backend:
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
       - PORT=${BACKEND_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_HOST=http://postgres
+      - POSTGRES_HOST=postgres
       - POSTGRES_PORT=${POSTGRES_PORT}
     build:
       context: ./
@@ -21,3 +24,8 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', '${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 5

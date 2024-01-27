@@ -1,9 +1,16 @@
 import { env } from 'process'
 import { ExpressAppInitializer } from './app'
+import { newApplicationContextFromEnv } from './context'
 
-const app = ExpressAppInitializer.create().app
 const port = env.PORT || 8080
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`)
-})
+ExpressAppInitializer.create(newApplicationContextFromEnv())
+  .then((initializer) => {
+    initializer.app.listen(port, () => {
+      console.log(`Server running on port ${port}`)
+    })
+  })
+  .catch((err) => {
+    console.error('Error encountered when starting server', err)
+    process.exit(1)
+  })

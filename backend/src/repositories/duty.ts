@@ -6,12 +6,11 @@ export interface DutyRepository {
   create(duty: Duty): Promise<void>
 
   /**
-   * @returns the list of duties in the order they were created
-   *
-   * It may make more sense if the sorting preference can be chosen by the user instead of specifying this fact in comments of interface.
-   * But for the size of this application, it is fine.
+   * Retrieves a list of duties in the order they were added.
    */
   listDuties(): Promise<Duty[]>
+  // Remark: It may make more sense if the sorting preference can be chosen by the user instead of specifying this fact in comments of interface.
+  // But for the size of this application, it is fine.
 }
 
 export class InMemoryDutyRepository implements DutyRepository {
@@ -43,27 +42,30 @@ export class PostgresDutyRepository implements DutyRepository {
     await this.sql`
       CREATE TABLE IF NOT EXISTS duties (
         id UUID PRIMARY KEY NOT NULL,
-        name VARCHAR(255) NOT NULL
+        name VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
       )`
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create(_: Duty) {
-    // TODO
-    throw new Error('Not implemented')
+  async create(duty: Duty) {
+    await this.sql`
+      INSERT INTO duties ${this.sql(duty, 'id', 'name')}`
   }
 
   async listDuties() {
-    const rows = await this.sql`SELECT * FROM duties`
+    const rows = await this.sql`
+      SELECT * FROM duties
+      ORDER BY created_at ASC
+    `
     return rows.map(this.mapRowToDuty)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private mapRowToDuty(row: postgres.Row): Duty {
-    // TODO: implement this
     return {
-      id: 'dummy',
-      name: 'dummy',
+      id: row.id,
+      name: row.name,
     }
   }
 
