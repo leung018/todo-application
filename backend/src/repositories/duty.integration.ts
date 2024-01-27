@@ -4,7 +4,7 @@ import {
   expect,
   beforeAll,
   afterAll,
-  afterEach,
+  beforeEach,
 } from '@jest/globals'
 import { PostgresDutyRepository } from './duty'
 import { newPostgresContextFromEnv } from './util'
@@ -17,7 +17,7 @@ describe('PostgresDutyRepository', () => {
     repo = await PostgresDutyRepository.create(newPostgresContextFromEnv())
   })
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await repo.sql`DELETE FROM duties` // TODO: clean up through the repository instead of directly
   })
 
