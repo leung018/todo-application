@@ -10,5 +10,6 @@ backend-dev:
 	cd backend && make dev-with-db
 frontend-dev:
 	cd frontend && yarn dev
-e2e-dev: # Run `make backend-dev` and `make frontend-dev` in separate terminals first.
-	cd e2e && yarn cypress open
+e2e-dev: # Run `make backend-dev` in separate terminal first.
+	cd e2e && yarn cypress open &
+	make frontend-dev
