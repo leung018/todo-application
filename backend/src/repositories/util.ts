@@ -10,11 +10,11 @@ export interface PostgresContext {
 
 export function newPostgresContextFromEnv(): PostgresContext {
   return {
-    host: process.env.POSTGRES_HOST ?? 'localhost',
-    port: Number(process.env.POSTGRES_PORT ?? '5432'),
-    user: process.env.POSTGRES_USER ?? 'admin',
-    password: process.env.POSTGRES_PASSWORD ?? 'mypassword',
-    database: process.env.POSTGRES_DB ?? 'admin',
+    host: process.env.POSTGRES_HOST || 'localhost',
+    port: Number(process.env.POSTGRES_PORT || '5432'),
+    user: process.env.POSTGRES_USER || 'admin',
+    password: process.env.POSTGRES_PASSWORD || 'mypassword',
+    database: process.env.POSTGRES_DB || 'admin',
   }
 }
 
