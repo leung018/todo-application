@@ -1,9 +1,13 @@
 import { env } from 'process'
 import { ExpressAppInitializer } from './app'
+import { newPostgresContextFromEnv } from './repositories/util'
 
-const app = ExpressAppInitializer.create().app
 const port = env.PORT || 8080
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`)
+ExpressAppInitializer.create({
+  postgresContext: newPostgresContextFromEnv(),
+}).then((initializer) => {
+  initializer.app.listen(port, () => {
+    console.log(`Server running on port ${port}`)
+  })
 })

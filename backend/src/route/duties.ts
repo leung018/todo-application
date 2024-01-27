@@ -1,17 +1,25 @@
 import express, { Request, Response } from 'express'
-import { DutyRepository, InMemoryDutyRepository } from '../repositories/duty'
+import {
+  DutyRepository,
+  InMemoryDutyRepository,
+  PostgresDutyRepository,
+} from '../repositories/duty'
 import { RouteService } from './route'
 import { DutyFactory } from '../models/duty'
+import { PostgresContext } from '../repositories/util'
 
 export class DutiesRouteService implements RouteService {
   readonly router = express.Router()
 
   private dutyRepository: DutyRepository
 
-  static create() {
-    return new DutiesRouteService({
-      dutyRepository: new InMemoryDutyRepository(), // TODO: Use a real repository
-    })
+  static async create({
+    postgresContext,
+  }: {
+    postgresContext: PostgresContext
+  }) {
+    const dutyRepository = await PostgresDutyRepository.create(postgresContext)
+    return new DutiesRouteService({ dutyRepository })
   }
 
   static createNull() {
