@@ -1,20 +1,15 @@
 import express, { Express, NextFunction, Request, Response } from 'express'
 import { DutiesRouteService } from './route/duties'
 import morgan from 'morgan'
-import { PostgresContext } from './repositories/util'
+import { ApplicationContext } from './context'
 
 export class ExpressAppInitializer {
   readonly app: Express
   private readonly dutiesRouteService: DutiesRouteService
 
-  static async create({
-    postgresContext,
-  }: {
-    postgresContext: PostgresContext
-  }) {
-    const dutiesRouteService = await DutiesRouteService.create({
-      postgresContext,
-    })
+  static async create(applicationContext: ApplicationContext) {
+    const dutiesRouteService =
+      await DutiesRouteService.create(applicationContext)
     return new ExpressAppInitializer({
       dutiesRouteService,
     })

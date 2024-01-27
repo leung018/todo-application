@@ -6,19 +6,17 @@ import {
 } from '../repositories/duty'
 import { RouteService } from './route'
 import { DutyFactory } from '../models/duty'
-import { PostgresContext } from '../repositories/util'
+import { ApplicationContext } from '../context'
 
 export class DutiesRouteService implements RouteService {
   readonly router = express.Router()
 
   private dutyRepository: DutyRepository
 
-  static async create({
-    postgresContext,
-  }: {
-    postgresContext: PostgresContext
-  }) {
-    const dutyRepository = await PostgresDutyRepository.create(postgresContext)
+  static async create(applicationContext: ApplicationContext) {
+    const dutyRepository = await PostgresDutyRepository.create(
+      applicationContext.postgresContext,
+    )
     return new DutiesRouteService({ dutyRepository })
   }
 
