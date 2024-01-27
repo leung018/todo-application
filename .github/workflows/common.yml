@@ -27,6 +27,33 @@ jobs:
         run: yarn format:check
       - name: Run unit tests
         run: yarn test:ci
+  backend-integration-tests:
+    runs-on: ubuntu-latest
+    container: node:20
+    defaults:
+      run:
+        working-directory: ./backend
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - run: yarn install --immutable
+      - name: Run integration tests
+        run: yarn integration-test --ci
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
   frontend-common-checks:
     # TODO: only change in frontend/** and this yml will trigger this job
     runs-on: ubuntu-latest

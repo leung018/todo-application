@@ -1,17 +1,12 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals'
 import { PostgresDutyRepository } from './duty'
+import { newPostgresContextFromEnv } from './util'
 
 describe('PostgresDutyRepository', () => {
   let repo: PostgresDutyRepository
 
   beforeAll(async () => {
-    repo = await PostgresDutyRepository.create({
-      host: 'localhost', // TODO: load these config by loader built by .env
-      port: 5432,
-      database: 'admin',
-      username: 'admin',
-      password: 'mypassword',
-    })
+    repo = await PostgresDutyRepository.create(newPostgresContextFromEnv())
   })
 
   it('should list empty duties when no any is created', async () => {
