@@ -1,4 +1,6 @@
 import { Duty } from '../models/duty'
+import { PostgresContext, newPostgresClient } from './util'
+import postgres from 'postgres'
 
 export interface DutyRepository {
   create(duty: Duty): Promise<void>
@@ -21,5 +23,51 @@ export class InMemoryDutyRepository implements DutyRepository {
 
   async listDuties() {
     return this.duties
+  }
+}
+
+export class PostgresDutyRepository implements DutyRepository {
+  readonly sql // TODO: make this private
+
+  static async create(context: PostgresContext) {
+    const repo = new PostgresDutyRepository(context)
+    await repo.createTableIfNotExists()
+    return repo
+  }
+
+  private constructor(context: PostgresContext) {
+    this.sql = newPostgresClient(context)
+  }
+
+  private async createTableIfNotExists() {
+    await this.sql`
+      CREATE TABLE IF NOT EXISTS duties (
+        id UUID PRIMARY KEY NOT NULL,
+        name VARCHAR(255) NOT NULL
+      )`
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async create(_: Duty) {
+    // TODO
+    throw new Error('Not implemented')
+  }
+
+  async listDuties() {
+    const rows = await this.sql`SELECT * FROM duties`
+    return rows.map(this.mapRowToDuty)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private mapRowToDuty(row: postgres.Row): Duty {
+    // TODO: implement this
+    return {
+      id: 'dummy',
+      name: 'dummy',
+    }
+  }
+
+  close() {
+    return this.sql.end()
   }
 }
