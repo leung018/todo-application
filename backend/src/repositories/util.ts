@@ -14,7 +14,7 @@ export function newPostgresContextFromEnv(): PostgresContext {
     port: Number(process.env.POSTGRES_PORT ?? '5432'),
     user: process.env.POSTGRES_USER ?? 'admin',
     password: process.env.POSTGRES_PASSWORD ?? 'mypassword',
-    database: process.env.POSTGRES_DATABASE ?? 'admin',
+    database: process.env.POSTGRES_DB ?? 'admin',
   }
 }
 
