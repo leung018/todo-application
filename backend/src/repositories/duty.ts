@@ -68,7 +68,7 @@ export class PostgresDutyRepository implements DutyRepository {
   }
 
   async deleteAllDuties() {
-    throw new Error('Not implemented')
+    await this.sql`DELETE FROM duties`
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
