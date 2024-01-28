@@ -11,6 +11,8 @@ export interface DutyRepository {
   listDuties(): Promise<Duty[]>
   // Remark: It may make more sense if the sorting preference can be chosen by the user instead of specifying this fact in comments of interface.
   // But for the size of this application, it is fine.
+
+  deleteAllDuties(): Promise<void>
 }
 
 export class InMemoryDutyRepository implements DutyRepository {
@@ -22,6 +24,10 @@ export class InMemoryDutyRepository implements DutyRepository {
 
   async listDuties() {
     return this.duties
+  }
+
+  async deleteAllDuties() {
+    this.duties = []
   }
 }
 
@@ -59,6 +65,10 @@ export class PostgresDutyRepository implements DutyRepository {
       ORDER BY created_at ASC
     `
     return rows.map(this.mapRowToDuty)
+  }
+
+  async deleteAllDuties() {
+    throw new Error('Not implemented')
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

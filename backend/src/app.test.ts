@@ -43,6 +43,16 @@ describe('API', () => {
     expect(duties[2].name).toBe('Duty 3')
   })
 
+  it('should delete all duties', async () => {
+    await createDuty()
+    await createDuty()
+
+    await deleteAllDuties()
+
+    const duties = await listDuties()
+    expect(duties.length).toBe(0)
+  })
+
   async function createDuty({ name = 'Name of Duty' } = {}) {
     const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)
@@ -61,6 +71,15 @@ describe('API', () => {
 
   async function callListDutiesApi() {
     return request(app).get('/duties')
+  }
+
+  async function deleteAllDuties() {
+    const response = await callDeleteAllDutiesApi()
+    expect(response.status).toBe(204)
+  }
+
+  async function callDeleteAllDutiesApi() {
+    return request(app).delete('/duties')
   }
 })
 
