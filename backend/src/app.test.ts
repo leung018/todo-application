@@ -1,13 +1,31 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import request from 'supertest'
 import { ExpressAppInitializer } from './app'
-import { Express } from 'express'
+import express, { Express } from 'express'
 
 describe('API', () => {
   let app: Express
 
   beforeEach(() => {
     app = ExpressAppInitializer.createNull().app
+  })
+
+  it('should handle uncaught promise exception from routeService', async () => {
+    // Add route service that throws error
+    const expressAppInitializer = ExpressAppInitializer.createNull()
+    const errorRouteService = {
+      router: express.Router(),
+    }
+    errorRouteService.router.get('/', async () => {
+      throw new Error('Unexpected error')
+    })
+    expressAppInitializer.addRouteService('/error', errorRouteService)
+    app = expressAppInitializer.app
+
+    // Make request to that route
+    const response = await request(app).get('/error')
+
+    expect(response.status).toBe(500)
   })
 
   it('should return back duty tend to create', async () => {

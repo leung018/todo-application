@@ -1,7 +1,14 @@
-import express, { Express, NextFunction, Request, Response } from 'express'
+import express, {
+  Express,
+  NextFunction,
+  Request,
+  Response,
+  Router,
+} from 'express'
 import { DutiesRouteService } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
+import { RouteService } from './route/route'
 
 export class ExpressAppInitializer {
   readonly app: Express
@@ -40,7 +47,21 @@ export class ExpressAppInitializer {
   }
 
   private setRoutes() {
-    this.app.use('/duties', this.dutiesRouteService.router)
+    this.addRouteService('/duties', this.dutiesRouteService)
+  }
+
+  addRouteService(path: string, routeService: RouteService) {
+    this.app.use(path, this.routerHandler(routeService.router))
+  }
+
+  private routerHandler(router: Router) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        await router(req, res, next)
+      } catch (error) {
+        next(error)
+      }
+    }
   }
 }
 
