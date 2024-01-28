@@ -1,4 +1,4 @@
-import { List, Input, Button, Typography } from 'antd'
+import { List, Input, Button, Typography, message } from 'antd'
 import { CheckOutlined, EditOutlined } from '@ant-design/icons'
 import { DutyRemoteService } from './services/duty'
 import { Duty } from './models/duty'
@@ -13,6 +13,7 @@ const App = ({
 }) => {
   const [duties, setDuties] = useState<Duty[]>([])
   const [inputValue, setInputValue] = useState('')
+  const [messageApi, contextHolder] = message.useMessage()
 
   useEffect(() => {
     dutyRemoteService.listDuties().then((duties) => {
@@ -22,6 +23,7 @@ const App = ({
 
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
+      {contextHolder}
       <div style={{ marginBottom: '24px' }}>
         <Input
           placeholder="Add new duty"
@@ -43,6 +45,9 @@ const App = ({
               })
               .then((duties) => {
                 setDuties(duties)
+              })
+              .catch((error) => {
+                messageApi.error(error.message)
               })
           }}
         >
