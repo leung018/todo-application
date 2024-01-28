@@ -1,4 +1,8 @@
 describe('e2e tests', () => {
+  beforeEach(() => {
+    cy.request('DELETE', `${Cypress.env('backendUrl')}/duties`)
+  })
+
   it('should create duty successfully', () => {
     cy.visit('/')
 

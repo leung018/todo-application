@@ -31,6 +31,7 @@ export class DutiesRouteService extends RouteService {
 
     this.post('/', this.createDuty)
     this.get('/', this.listDuties)
+    this.delete('/', this.deleteAllDuties)
   }
 
   private createDuty = async (req: Request, res: Response) => {
@@ -51,5 +52,10 @@ export class DutiesRouteService extends RouteService {
   private listDuties = async (req: Request, res: Response) => {
     const duties = await this.dutyRepository.listDuties()
     res.status(200).send(duties)
+  }
+
+  private deleteAllDuties = async (req: Request, res: Response) => {
+    await this.dutyRepository.deleteAllDuties()
+    res.status(204).send()
   }
 }
