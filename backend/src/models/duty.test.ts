@@ -20,6 +20,11 @@ describe('DutyFactory', () => {
     expect(() => createDuty({ name: ' ' })).toThrow(InvalidArgumentError)
   })
 
+  it('should prevent extremely long name', () => {
+    const name = 'a'.repeat(251)
+    expect(() => createDuty({ name })).toThrow(InvalidArgumentError)
+  })
+
   function createDuty({ name = 'Name of Duty' } = {}) {
     return DutyFactory.createDuty({ name })
   }
