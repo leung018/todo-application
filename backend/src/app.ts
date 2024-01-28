@@ -5,6 +5,7 @@ import express, {
   Response,
   Router,
 } from 'express'
+import 'express-async-errors' // To fix UnhandledPromiseRejection in async route handlers. See https://github.com/davidbanham/express-async-errors/
 import { DutiesRouteService } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'

@@ -1604,6 +1604,7 @@ __metadata:
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^9.1.0"
     express: "npm:^4.18.2"
+    express-async-errors: "npm:^3.1.1"
     jest: "npm:^29.7.0"
     morgan: "npm:^1.10.0"
     nodemon: "npm:^3.0.3"
@@ -2448,6 +2449,15 @@ __metadata:
   version: 3.1.1
   resolution: "exponential-backoff@npm:3.1.1"
   checksum: 2d9bbb6473de7051f96790d5f9a678f32e60ed0aa70741dc7fdc96fec8d631124ec3374ac144387604f05afff9500f31a1d45bd9eee4cdc2e4f9ad2d9b9d5dbd
+  languageName: node
+  linkType: hard
+
+"express-async-errors@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "express-async-errors@npm:3.1.1"
+  peerDependencies:
+    express: ^4.16.2
+  checksum: dae2b88a6416daefd27a98b946a65b56492ab1d5002cb62cd9d07f03c8cd4dae098725bc590e7ad3b48d4d3be726850a5864a4c7b427660b02c43903b70463ca
   languageName: node
   linkType: hard
 
