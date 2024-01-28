@@ -17,7 +17,7 @@ describe('API', () => {
   })
 
   it('should return bad request if invalid duty name', async () => {
-    const response = await request(app).post('/duties').send({ name: '' })
+    const response = await callCreateDutyApi({ name: '' })
     expect(response.status).toBe(400)
     expect(response.body.message).toBe('Name of duty cannot be empty')
   })
@@ -43,14 +43,22 @@ describe('API', () => {
   })
 
   async function createDuty({ name = 'Name of Duty' } = {}) {
-    const response = await request(app).post('/duties').send({ name })
+    const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)
     return response.body
   }
 
+  async function callCreateDutyApi({ name }: { name: string }) {
+    return request(app).post('/duties').send({ name })
+  }
+
   async function listDuties() {
-    const response = await request(app).get('/duties')
+    const response = await callListDutiesApi()
     expect(response.status).toBe(200)
     return response.body
+  }
+
+  async function callListDutiesApi() {
+    return request(app).get('/duties')
   }
 })
