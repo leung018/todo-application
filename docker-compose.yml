@@ -7,6 +7,8 @@ services:
       context: ./e2e
       dockerfile: Dockerfile
     working_dir: /app
+    environment:
+      - BACKEND_URL=${REACT_APP_API_ENDPOINT-:PLEASE_SET_REACT_APP_API_ENDPOINT}
     volumes:
       - ./e2e/cypress:/app/cypress
       - ./e2e/cypress.config.js:/app/cypress.config.js
