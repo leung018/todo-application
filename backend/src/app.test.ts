@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import request from 'supertest'
 import { ExpressAppInitializer } from './app'
-import express, { Express } from 'express'
+import { Express } from 'express'
+import { RouteService } from './route/route'
 
 describe('API', () => {
   let app: Express
@@ -13,12 +14,14 @@ describe('API', () => {
   it('should handle uncaught promise exception from routeService', async () => {
     // Add route service that throws error
     const expressAppInitializer = ExpressAppInitializer.createNull()
-    const errorRouteService = {
-      router: express.Router(),
-    }
-    errorRouteService.router.get('/', async () => {
-      throw new Error('Unexpected error')
-    })
+    const errorRouteService = new (class extends RouteService {
+      constructor() {
+        super()
+        this.get('/', async () => {
+          throw new Error('Unexpected error')
+        })
+      }
+    })()
     expressAppInitializer.addRouteService('/error', errorRouteService)
     app = expressAppInitializer.app
 

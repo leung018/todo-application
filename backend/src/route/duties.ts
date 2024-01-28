@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import { Request, Response } from 'express'
 import {
   DutyRepository,
   InMemoryDutyRepository,
@@ -9,9 +9,7 @@ import { Duty, DutyFactory } from '../models/duty'
 import { ApplicationContext } from '../context'
 import { InvalidArgumentError } from '../utils/errors'
 
-export class DutiesRouteService implements RouteService {
-  readonly router = express.Router()
-
+export class DutiesRouteService extends RouteService {
   private dutyRepository: DutyRepository
 
   static async create(applicationContext: ApplicationContext) {
@@ -28,10 +26,11 @@ export class DutiesRouteService implements RouteService {
   }
 
   private constructor({ dutyRepository }: { dutyRepository: DutyRepository }) {
+    super()
     this.dutyRepository = dutyRepository
 
-    this.router.post('/', this.createDuty)
-    this.router.get('/', this.listDuties)
+    this.post('/', this.createDuty)
+    this.get('/', this.listDuties)
   }
 
   private createDuty = async (req: Request, res: Response) => {
