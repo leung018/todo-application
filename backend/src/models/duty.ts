@@ -3,7 +3,7 @@ import { InvalidArgumentError } from '../utils/errors'
 
 export interface Duty {
   readonly id: string
-  name: string
+  readonly name: string
 }
 
 export class DutyFactory {
