@@ -16,6 +16,12 @@ describe('API', () => {
     expect(typeof duty.id).toBe('string')
   })
 
+  it('should return bad request if invalid duty name', async () => {
+    const response = await request(app).post('/duties').send({ name: '' })
+    expect(response.status).toBe(400)
+    expect(response.body.message).toBe('Name of duty cannot be empty')
+  })
+
   it('should create single duty and list it', async () => {
     const createdDuty = await createDuty({ name: 'My Duty' })
 

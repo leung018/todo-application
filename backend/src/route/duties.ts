@@ -5,8 +5,9 @@ import {
   PostgresDutyRepository,
 } from '../repositories/duty'
 import { RouteService } from './route'
-import { DutyFactory } from '../models/duty'
+import { Duty, DutyFactory } from '../models/duty'
 import { ApplicationContext } from '../context'
+import { InvalidArgumentError } from '../utils/errors'
 
 export class DutiesRouteService implements RouteService {
   readonly router = express.Router()
@@ -34,7 +35,16 @@ export class DutiesRouteService implements RouteService {
   }
 
   private createDuty = async (req: Request, res: Response) => {
-    const duty = DutyFactory.createDuty({ name: req.body.name })
+    let duty: Duty
+    try {
+      duty = DutyFactory.createDuty({ name: req.body.name })
+    } catch (error) {
+      if (error instanceof InvalidArgumentError) {
+        res.status(400).send({ message: error.message })
+        return
+      }
+      throw error
+    }
     await this.dutyRepository.create(duty)
     res.status(201).send(duty)
   }
