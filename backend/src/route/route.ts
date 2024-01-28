@@ -19,6 +19,13 @@ export abstract class RouteService {
     this.router.put(path, this.wrapper(handler))
   }
 
+  protected patch(
+    path: string,
+    handler: (req: Request, res: Response) => void,
+  ) {
+    this.router.patch(path, this.wrapper(handler))
+  }
+
   protected delete(
     path: string,
     handler: (req: Request, res: Response) => void,

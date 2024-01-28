@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from '@jest/globals'
+import { describe, it, expect, beforeEach, beforeAll } from '@jest/globals'
 import request from 'supertest'
 import { ExpressAppInitializer } from './app'
 import { Express } from 'express'
@@ -9,26 +9,6 @@ describe('API', () => {
 
   beforeEach(() => {
     app = ExpressAppInitializer.createNull().app
-  })
-
-  it('should handle uncaught promise exception from routeService', async () => {
-    // Add route service that throws error
-    const expressAppInitializer = ExpressAppInitializer.createNull()
-    const errorRouteService = new (class extends RouteService {
-      constructor() {
-        super()
-        this.get('/', async () => {
-          throw new Error('Unexpected error')
-        })
-      }
-    })()
-    expressAppInitializer.addRouteService('/error', errorRouteService)
-    app = expressAppInitializer.app
-
-    // Make request to that route
-    const response = await request(app).get('/error')
-
-    expect(response.status).toBe(500)
   })
 
   it('should return back duty tend to create', async () => {
@@ -82,4 +62,55 @@ describe('API', () => {
   async function callListDutiesApi() {
     return request(app).get('/duties')
   }
+})
+
+describe('Async error handling', () => {
+  describe('should handle uncaught promise exception from routeService', () => {
+    let app: Express
+
+    beforeAll(() => {
+      const expressAppInitializer = ExpressAppInitializer.createNull()
+      const asyncHandlerThrowError = async () => {
+        throw new Error('Unexpected error')
+      }
+
+      const errorRouteService = new (class extends RouteService {
+        constructor() {
+          super()
+          this.get('/', asyncHandlerThrowError)
+          this.post('/', asyncHandlerThrowError)
+          this.put('/', asyncHandlerThrowError)
+          this.delete('/', asyncHandlerThrowError)
+          this.patch('/', asyncHandlerThrowError)
+        }
+      })()
+      expressAppInitializer.addRouteService('/error', errorRouteService)
+      app = expressAppInitializer.app
+    })
+
+    it('get', async () => {
+      const response = await request(app).get('/error')
+      expect(response.status).toBe(500)
+    })
+
+    it('post', async () => {
+      const response = await request(app).post('/error')
+      expect(response.status).toBe(500)
+    })
+
+    it('put', async () => {
+      const response = await request(app).put('/error')
+      expect(response.status).toBe(500)
+    })
+
+    it('delete', async () => {
+      const response = await request(app).delete('/error')
+      expect(response.status).toBe(500)
+    })
+
+    it('patch', async () => {
+      const response = await request(app).patch('/error')
+      expect(response.status).toBe(500)
+    })
+  })
 })
