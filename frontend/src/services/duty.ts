@@ -19,7 +19,16 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name }),
-    }).then((res) => res.json())
+    }).then((res) => {
+      if (res.ok) {
+        return res.json()
+      } else {
+        // TODO: test it in e2e test
+        return res.json().then((body) => {
+          throw new Error(body.message)
+        })
+      }
+    })
   }
 
   async listDuties() {
