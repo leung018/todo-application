@@ -19,7 +19,7 @@ describe('e2e tests', () => {
 
     cy.findByText('Add').click()
 
-    cy.findByText('Name of duty cannot be empty').should('exist')
+    cy.findByText(EMPTY_DUTY_ERROR_MESSAGE).should('exist')
   })
 
   it('should update created duty', () => {
@@ -46,6 +46,8 @@ describe('e2e tests', () => {
     cy.findByDisplayValue('Duty 1').clear()
     cy.findByTestId('save-button-0').click()
 
-    cy.findByText('Name of duty cannot be empty').should('exist')
+    cy.findByText(EMPTY_DUTY_ERROR_MESSAGE).should('exist')
   })
 })
+
+const EMPTY_DUTY_ERROR_MESSAGE = 'Name of duty cannot be empty'
