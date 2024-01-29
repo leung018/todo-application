@@ -24,4 +24,16 @@ describe('Duty', () => {
     const name = 'a'.repeat(251)
     expect(() => Duty.createNull({ name })).toThrow(InvalidArgumentError)
   })
+
+  it('should expect update of name has same validation as creation', () => {
+    const duty = Duty.createNull()
+    expect(() => (duty.name = ' ')).toThrow(InvalidArgumentError)
+    expect(() => (duty.name = 'a'.repeat(251))).toThrow(InvalidArgumentError)
+  })
+
+  it('should update name', () => {
+    const duty = Duty.createNull()
+    duty.name = 'Updated New Name'
+    expect(duty.name).toBe('Updated New Name')
+  })
 })

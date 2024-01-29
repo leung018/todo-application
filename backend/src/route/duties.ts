@@ -7,7 +7,7 @@ import {
 import { RouteService } from './route'
 import { Duty } from '../models/duty'
 import { ApplicationContext } from '../context'
-import { InvalidArgumentError } from '../utils/errors'
+import { RouteErrorHandler } from './util'
 
 export class DutiesRouteService extends RouteService {
   private dutyRepository: DutyRepository
@@ -32,21 +32,29 @@ export class DutiesRouteService extends RouteService {
     this.post('/', this.createDuty)
     this.get('/', this.listDuties)
     this.delete('/', this.deleteAllDuties)
+    this.put('/:id', this.updateDuty)
   }
 
   private createDuty = async (req: Request, res: Response) => {
     let duty: Duty
     try {
       duty = Duty.create({ name: req.body.name })
-    } catch (error) {
-      if (error instanceof InvalidArgumentError) {
-        res.status(400).send({ message: error.message })
-        return
-      }
-      throw error
+    } catch (err) {
+      return new RouteErrorHandler().handle(err, res)
     }
     await this.dutyRepository.create(duty)
     res.status(201).send(mapDutyToJSON(duty))
+  }
+
+  private updateDuty = async (req: Request, res: Response) => {
+    let duty: Duty
+    try {
+      duty = new Duty({ id: req.params.id, name: req.body.name })
+      await this.dutyRepository.update(duty)
+    } catch (err) {
+      return new RouteErrorHandler().handle(err, res)
+    }
+    res.status(200).send()
   }
 
   private listDuties = async (req: Request, res: Response) => {
