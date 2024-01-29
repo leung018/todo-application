@@ -82,12 +82,12 @@ const DutiesList = ({
       header={<Title level={4}>Duties List</Title>}
       bordered
       dataSource={duties}
-      renderItem={(item) => (
+      renderItem={(item, index) => (
         <List.Item
           actions={[
             editingId === item.id ? (
               <Button
-                data-testid={`save-button-${item.id}`}
+                data-testid={`save-button-${index}`}
                 shape="circle"
                 icon={<SaveOutlined />}
                 onClick={() => {
@@ -98,7 +98,7 @@ const DutiesList = ({
               ></Button>
             ) : (
               <Button
-                data-testid={`edit-button-${item.id}`}
+                data-testid={`edit-button-${index}`}
                 shape="circle"
                 icon={<EditOutlined />}
                 onClick={() => {
