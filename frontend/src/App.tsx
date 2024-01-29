@@ -37,7 +37,14 @@ const App = ({
   }
 
   const handleUpdateDuty = (duty: Duty) => {
-    return dutyRemoteService.updateDuty(duty)
+    return dutyRemoteService
+      .updateDuty(duty)
+      .then(() => {
+        return dutyRemoteService.listDuties()
+      })
+      .then((duties) => {
+        setDuties(duties)
+      })
   }
 
   return (
