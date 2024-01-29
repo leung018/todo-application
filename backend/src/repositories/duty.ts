@@ -73,10 +73,10 @@ export class PostgresDutyRepository implements DutyRepository {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private mapRowToDuty(row: postgres.Row): Duty {
-    return {
+    return new Duty({
       id: row.id,
       name: row.name,
-    }
+    })
   }
 
   close() {

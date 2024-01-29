@@ -5,7 +5,7 @@ import {
   PostgresDutyRepository,
 } from '../repositories/duty'
 import { RouteService } from './route'
-import { Duty, DutyFactory } from '../models/duty'
+import { Duty } from '../models/duty'
 import { ApplicationContext } from '../context'
 import { InvalidArgumentError } from '../utils/errors'
 
@@ -37,7 +37,7 @@ export class DutiesRouteService extends RouteService {
   private createDuty = async (req: Request, res: Response) => {
     let duty: Duty
     try {
-      duty = DutyFactory.createDuty({ name: req.body.name })
+      duty = Duty.create({ name: req.body.name })
     } catch (error) {
       if (error instanceof InvalidArgumentError) {
         res.status(400).send({ message: error.message })
@@ -46,16 +46,20 @@ export class DutiesRouteService extends RouteService {
       throw error
     }
     await this.dutyRepository.create(duty)
-    res.status(201).send(duty)
+    res.status(201).send(mapDutyToJSON(duty))
   }
 
   private listDuties = async (req: Request, res: Response) => {
     const duties = await this.dutyRepository.listDuties()
-    res.status(200).send(duties)
+    res.status(200).send(duties.map(mapDutyToJSON))
   }
 
   private deleteAllDuties = async (req: Request, res: Response) => {
     await this.dutyRepository.deleteAllDuties()
     res.status(204).send()
   }
+}
+
+function mapDutyToJSON(duty: Duty) {
+  return { id: duty.id, name: duty.name }
 }
