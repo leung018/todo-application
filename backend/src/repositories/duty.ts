@@ -32,7 +32,7 @@ export class InMemoryDutyRepository implements DutyRepository {
 }
 
 export class PostgresDutyRepository implements DutyRepository {
-  readonly sql // TODO: make this private
+  private readonly sql
 
   static async create(context: PostgresContext) {
     const repo = new PostgresDutyRepository(context)
