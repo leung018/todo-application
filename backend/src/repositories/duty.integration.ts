@@ -19,7 +19,7 @@ describe('PostgresDutyRepository', () => {
   })
 
   beforeEach(async () => {
-    await repo.sql`DELETE FROM duties` // TODO: clean up through the repository instead of directly
+    await repo.deleteAllDuties()
   })
 
   it('should list empty duties when no any is created', async () => {
