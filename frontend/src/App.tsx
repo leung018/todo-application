@@ -45,6 +45,9 @@ const App = ({
       .then((duties) => {
         setDuties(duties)
       })
+      .catch((error) => {
+        messageApi.error(error.message)
+      })
   }
 
   return (

@@ -57,7 +57,7 @@ describe('App', () => {
     expect(savedDuties[1].name).toEqual('New Duty')
   })
 
-  it('should handle error when remote service promise rejected', async () => {
+  it('should handle error when remote service rejected to create duty', async () => {
     const dutyRemoteService = new InMemoryDutyService()
     dutyRemoteService.createDuty = () => {
       return Promise.reject(new Error('Create duty failed'))
@@ -94,6 +94,24 @@ describe('App', () => {
     const savedDuties = await dutyRemoteService.listDuties()
     expect(savedDuties).toHaveLength(1)
     expect(savedDuties[0].name).toEqual('Updated Duty')
+  })
+
+  it('should handle error when remote service rejected to update duty', async () => {
+    const dutyRemoteService = new InMemoryDutyService()
+    dutyRemoteService.updateDuty = () => {
+      return Promise.reject(new Error('Update duty failed'))
+    }
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+    addDutyViaUI(screen)
+
+    const editButton = await screen.findByTestId('edit-button-0')
+    fireEvent.click(editButton)
+
+    const saveButton = screen.getByTestId('save-button-0')
+    fireEvent.click(saveButton)
+
+    expect(await screen.findByText('Update duty failed')).toBeVisible()
   })
 
   function addDutyViaUI(
