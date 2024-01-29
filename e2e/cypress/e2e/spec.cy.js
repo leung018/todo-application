@@ -22,4 +22,17 @@ describe('e2e tests', () => {
 
     cy.findByText('Name of duty cannot be empty').should('exist')
   })
+
+  it('should update created duty', () => {
+    cy.visit('/')
+
+    cy.findByPlaceholderText('Add new duty').type('Duty 1')
+    cy.findByText('Add').click()
+
+    cy.findByTestId('edit-button-0').click()
+    cy.findByDisplayValue('Duty 1').type(' Updated')
+    cy.findByTestId('save-button-0').click()
+
+    cy.findByText('Duty 1 Updated').should('exist')
+  })
 })
