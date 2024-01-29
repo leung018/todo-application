@@ -54,30 +54,36 @@ const App = ({
           Add
         </Button>
       </div>
-      <List
-        header={<Title level={4}>Duties List</Title>}
-        bordered
-        dataSource={duties}
-        renderItem={(item) => (
-          <List.Item
-            actions={[
-              <Button
-                shape="circle"
-                icon={<EditOutlined />}
-                onClick={() => {}}
-              />,
-              <Button
-                shape="circle"
-                icon={<CheckOutlined />}
-                onClick={() => {}}
-              />,
-            ]}
-          >
-            <Text>{item.name}</Text>
-          </List.Item>
-        )}
-      />
+      <DutiesList duties={duties} />
     </div>
+  )
+}
+
+const DutiesList = ({ duties }: { duties: Duty[] }) => {
+  return (
+    <List
+      header={<Title level={4}>Duties List</Title>}
+      bordered
+      dataSource={duties}
+      renderItem={(item) => (
+        <List.Item
+          actions={[
+            <Button
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => {}}
+            />,
+            <Button
+              shape="circle"
+              icon={<CheckOutlined />}
+              onClick={() => {}}
+            />,
+          ]}
+        >
+          <Text>{item.name}</Text>
+        </List.Item>
+      )}
+    />
   )
 }
 
