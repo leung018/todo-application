@@ -9,6 +9,7 @@ import {
 import { PostgresDutyRepository } from './duty'
 import { newPostgresContextFromEnv } from './util'
 import { Duty } from '../models/duty'
+import { EntityNotFoundError } from '../utils/errors'
 
 describe('PostgresDutyRepository', () => {
   let repo: PostgresDutyRepository
@@ -48,6 +49,23 @@ describe('PostgresDutyRepository', () => {
 
     const duties = await repo.listDuties()
     expect(duties).toEqual([])
+  })
+
+  it('should update duty', async () => {
+    const duty = Duty.createNull({ name: 'Original Name' })
+    await repo.create(duty)
+
+    duty.name = 'Updated Duty Name'
+    await repo.update(duty)
+
+    const duties = await repo.listDuties()
+    expect(duties).toEqual([duty])
+  })
+
+  it('should throw error when updating non-existing duty', async () => {
+    await expect(repo.update(Duty.createNull())).rejects.toThrow(
+      EntityNotFoundError,
+    )
   })
 
   afterAll(async () => {

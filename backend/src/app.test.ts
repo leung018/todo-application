@@ -1,8 +1,13 @@
 import { describe, it, expect, beforeEach, beforeAll } from '@jest/globals'
-import request from 'supertest'
+import request, { Response } from 'supertest'
 import { ExpressAppInitializer } from './app'
 import { Express } from 'express'
 import { RouteService } from './route/route'
+
+interface Duty {
+  id: string
+  name: string
+}
 
 describe('API', () => {
   let app: Express
@@ -19,8 +24,13 @@ describe('API', () => {
 
   it('should return bad request if invalid duty name', async () => {
     const response = await callCreateDutyApi({ name: '' })
-    expect(response.status).toBe(400)
-    expect(response.body.message).toBe('Name of duty cannot be empty')
+    assertErrorResponse(
+      {
+        status: 400,
+        message: 'Name of duty cannot be empty',
+      },
+      response,
+    )
   })
 
   it('should create single duty and list it', async () => {
@@ -53,7 +63,47 @@ describe('API', () => {
     expect(duties.length).toBe(0)
   })
 
-  async function createDuty({ name = 'Name of Duty' } = {}) {
+  it('should return 404 if duty not found for update api', async () => {
+    const response = await callUpdateDutyApi({
+      id: 'non-existing-id',
+    })
+    assertErrorResponse(
+      {
+        status: 404,
+        message: 'Duty not found',
+      },
+      response,
+    )
+  })
+
+  it('should update duty', async () => {
+    const createdDuty = await createDuty({ name: 'Original Name' })
+
+    await updateDuty({
+      id: createdDuty.id,
+      name: 'Updated Name',
+    })
+
+    const duties = await listDuties()
+    expect(duties[0].id).toBe(createdDuty.id)
+    expect(duties[0].name).toBe('Updated Name')
+  })
+
+  it('should return 400 if invalid duty name for update api', async () => {
+    const createdDuty = await createDuty()
+
+    const response = await callUpdateDutyApi({
+      id: createdDuty.id,
+      name: '',
+    })
+
+    assertErrorResponse(
+      { status: 400, message: 'Name of duty cannot be empty' },
+      response,
+    )
+  })
+
+  async function createDuty({ name = 'Name of Duty' } = {}): Promise<Duty> {
     const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)
     return response.body
@@ -63,7 +113,22 @@ describe('API', () => {
     return request(app).post('/duties').send({ name })
   }
 
-  async function listDuties() {
+  async function updateDuty({ id, name }: Duty): Promise<void> {
+    const response = await callUpdateDutyApi({ id, name })
+    expect(response.status).toBe(200)
+  }
+
+  async function callUpdateDutyApi({
+    id,
+    name = 'Updated Name',
+  }: {
+    id: string
+    name?: string
+  }) {
+    return request(app).put(`/duties/${id}`).send({ name })
+  }
+
+  async function listDuties(): Promise<Duty[]> {
     const response = await callListDutiesApi()
     expect(response.status).toBe(200)
     return response.body
@@ -82,6 +147,17 @@ describe('API', () => {
     return request(app).delete('/duties')
   }
 })
+
+function assertErrorResponse(
+  expected: {
+    status: number
+    message: string
+  },
+  actualResponse: Response,
+) {
+  expect(actualResponse.status).toBe(expected.status)
+  expect(actualResponse.body.message).toBe(expected.message)
+}
 
 describe('Async error handling', () => {
   describe('should handle uncaught promise exception from routeService', () => {

@@ -35,4 +35,9 @@ export class Duty {
   get name() {
     return this._name
   }
+
+  set name(name: string) {
+    this.validateName(name)
+    this._name = name
+  }
 }
