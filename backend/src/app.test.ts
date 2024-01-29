@@ -53,6 +53,14 @@ describe('API', () => {
     expect(duties.length).toBe(0)
   })
 
+  it('should return 404 if duty not found for update api', async () => {
+    const response = await callUpdateDutyApi({
+      id: 'non-existing-id',
+    })
+    expect(response.status).toBe(404)
+    expect(response.body.message).toBe('Duty not found')
+  })
+
   async function createDuty({ name = 'Name of Duty' } = {}) {
     const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)
@@ -61,6 +69,16 @@ describe('API', () => {
 
   async function callCreateDutyApi({ name }: { name: string }) {
     return request(app).post('/duties').send({ name })
+  }
+
+  async function callUpdateDutyApi({
+    id,
+    name = 'Updated Name',
+  }: {
+    id: string
+    name?: string
+  }) {
+    return request(app).put(`/duties/${id}`).send({ name })
   }
 
   async function listDuties() {

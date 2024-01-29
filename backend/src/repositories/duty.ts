@@ -39,7 +39,10 @@ export class InMemoryDutyRepository implements DutyRepository {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update(duty: Duty) {
-    // TODO: implement this
+    const index = this.duties.findIndex((d) => d.id === duty.id)
+    if (index === -1) {
+      throw new EntityNotFoundError('Duty not found')
+    }
   }
 }
 

@@ -7,7 +7,7 @@ import {
 import { RouteService } from './route'
 import { Duty } from '../models/duty'
 import { ApplicationContext } from '../context'
-import { InvalidArgumentError } from '../utils/errors'
+import { EntityNotFoundError, InvalidArgumentError } from '../utils/errors'
 
 export class DutiesRouteService extends RouteService {
   private dutyRepository: DutyRepository
@@ -32,6 +32,7 @@ export class DutiesRouteService extends RouteService {
     this.post('/', this.createDuty)
     this.get('/', this.listDuties)
     this.delete('/', this.deleteAllDuties)
+    this.put('/:id', this.updateDuty)
   }
 
   private createDuty = async (req: Request, res: Response) => {
@@ -47,6 +48,18 @@ export class DutiesRouteService extends RouteService {
     }
     await this.dutyRepository.create(duty)
     res.status(201).send(mapDutyToJSON(duty))
+  }
+
+  private updateDuty = async (req: Request, res: Response) => {
+    const duty = new Duty({ id: req.params.id, name: req.body.name })
+    try {
+      await this.dutyRepository.update(duty)
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        res.status(404).send({ message: error.message })
+        return
+      }
+    }
   }
 
   private listDuties = async (req: Request, res: Response) => {
