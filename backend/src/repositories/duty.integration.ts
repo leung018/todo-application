@@ -8,7 +8,7 @@ import {
 } from '@jest/globals'
 import { PostgresDutyRepository } from './duty'
 import { newPostgresContextFromEnv } from './util'
-import { DutyFactory } from '../models/duty'
+import { Duty } from '../models/duty'
 
 describe('PostgresDutyRepository', () => {
   let repo: PostgresDutyRepository
@@ -27,8 +27,8 @@ describe('PostgresDutyRepository', () => {
   })
 
   it('should list created duties same as order they added', async () => {
-    const duty1 = DutyFactory.createDuty({ name: 'duty Z' })
-    const duty2 = DutyFactory.createDuty({ name: 'duty X' })
+    const duty1 = Duty.createNull({ name: 'duty Z' })
+    const duty2 = Duty.createNull({ name: 'duty X' })
 
     await repo.create(duty1)
     await repo.create(duty2)
@@ -38,8 +38,8 @@ describe('PostgresDutyRepository', () => {
   })
 
   it('should deleteAllDuties remove created duties', async () => {
-    const duty1 = DutyFactory.createDuty({ name: 'duty 1' })
-    const duty2 = DutyFactory.createDuty({ name: 'duty 2' })
+    const duty1 = Duty.createNull()
+    const duty2 = Duty.createNull()
 
     await repo.create(duty1)
     await repo.create(duty2)
