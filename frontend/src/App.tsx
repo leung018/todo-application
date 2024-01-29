@@ -1,5 +1,5 @@
 import { List, Input, Button, Typography, message } from 'antd'
-import { CheckOutlined, EditOutlined } from '@ant-design/icons'
+import { CheckOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons'
 import { DutyRemoteService } from './services/duty'
 import { Duty } from './models/duty'
 import { useEffect, useState } from 'react'
@@ -21,6 +21,35 @@ const App = ({
     })
   }, [dutyRemoteService])
 
+  const handleCreateDuty = (name: string) => {
+    return dutyRemoteService
+      .createDuty(inputValue)
+      .then(() => {
+        setInputValue('')
+        return dutyRemoteService.listDuties()
+      })
+      .then((duties) => {
+        setDuties(duties)
+      })
+      .catch((error) => {
+        messageApi.error(error.message)
+      })
+  }
+
+  const handleUpdateDuty = (duty: Duty) => {
+    return dutyRemoteService
+      .updateDuty(duty)
+      .then(() => {
+        return dutyRemoteService.listDuties()
+      })
+      .then((duties) => {
+        setDuties(duties)
+      })
+      .catch((error) => {
+        messageApi.error(error.message)
+      })
+  }
+
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       {contextHolder}
@@ -37,42 +66,57 @@ const App = ({
           type="primary"
           style={{ marginTop: '5px' }}
           onClick={() => {
-            dutyRemoteService
-              .createDuty(inputValue)
-              .then(() => {
-                setInputValue('')
-                return dutyRemoteService.listDuties()
-              })
-              .then((duties) => {
-                setDuties(duties)
-              })
-              .catch((error) => {
-                messageApi.error(error.message)
-              })
+            handleCreateDuty(inputValue)
           }}
         >
           Add
         </Button>
       </div>
-      <DutiesList duties={duties} />
+      <DutiesList duties={duties} onUpdateDuty={handleUpdateDuty} />
     </div>
   )
 }
 
-const DutiesList = ({ duties }: { duties: Duty[] }) => {
+const DutiesList = ({
+  duties,
+  onUpdateDuty,
+}: {
+  duties: Duty[]
+  onUpdateDuty: (duty: Duty) => Promise<unknown>
+}) => {
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingValue, setEditingValue] = useState('')
+
   return (
     <List
       header={<Title level={4}>Duties List</Title>}
       bordered
       dataSource={duties}
-      renderItem={(item) => (
+      renderItem={(item, index) => (
         <List.Item
           actions={[
-            <Button
-              shape="circle"
-              icon={<EditOutlined />}
-              onClick={() => {}}
-            />,
+            editingId === item.id ? (
+              <Button
+                data-testid={`save-button-${index}`}
+                shape="circle"
+                icon={<SaveOutlined />}
+                onClick={() => {
+                  onUpdateDuty({ ...item, name: editingValue }).then(() => {
+                    setEditingId(null)
+                  })
+                }}
+              ></Button>
+            ) : (
+              <Button
+                data-testid={`edit-button-${index}`}
+                shape="circle"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  setEditingValue(item.name)
+                  setEditingId(item.id)
+                }}
+              />
+            ),
             <Button
               shape="circle"
               icon={<CheckOutlined />}
@@ -80,7 +124,16 @@ const DutiesList = ({ duties }: { duties: Duty[] }) => {
             />,
           ]}
         >
-          <Text>{item.name}</Text>
+          {editingId === item.id ? (
+            <Input
+              value={editingValue}
+              onChange={(e) => {
+                setEditingValue(e.target.value)
+              }}
+            />
+          ) : (
+            <Text>{item.name}</Text>
+          )}
         </List.Item>
       )}
     />
