@@ -14,4 +14,12 @@ describe('e2e tests', () => {
     cy.visit('/')
     cy.findByText('Duty 1').should('exist')
   })
+
+  it('should display error message when creating empty duty', () => {
+    cy.visit('/')
+
+    cy.findByText('Add').click()
+
+    cy.findByText('Name of duty cannot be empty').should('exist')
+  })
 })

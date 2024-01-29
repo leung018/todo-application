@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  Screen,
+} from '@testing-library/react'
 import App from './App'
 import { InMemoryDutyService } from './services/duty'
 
@@ -35,11 +41,7 @@ describe('App', () => {
     // because the useEffect hook may be triggered after the add button is clicked.
     await screen.findByText('Initial Duty')
 
-    const input = screen.getByPlaceholderText('Add new duty')
-    fireEvent.change(input, { target: { value: 'New Duty' } })
-
-    const addButton = screen.getByText('Add')
-    fireEvent.click(addButton)
+    addDutyViaUI(screen, { name: 'New Duty' })
 
     // Input should be cleared
     await waitFor(() => {
@@ -54,4 +56,31 @@ describe('App', () => {
     expect(savedDuties).toHaveLength(2)
     expect(savedDuties[1].name).toEqual('New Duty')
   })
+
+  it('should handle error when remote service promise rejected', async () => {
+    const dutyRemoteService = new InMemoryDutyService()
+    dutyRemoteService.createDuty = () => {
+      return Promise.reject(new Error('Create duty failed'))
+    }
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    addDutyViaUI(screen)
+
+    expect(await screen.findByText('Create duty failed')).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(0)
+  })
+
+  function addDutyViaUI(
+    screen: Screen,
+    { name = 'Duty 1' }: { name?: string } = {},
+  ) {
+    const input = screen.getByPlaceholderText('Add new duty')
+    fireEvent.change(input, { target: { value: name } })
+
+    const addButton = screen.getByText('Add')
+    fireEvent.click(addButton)
+  }
 })
