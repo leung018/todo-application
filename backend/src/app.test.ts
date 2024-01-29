@@ -4,6 +4,11 @@ import { ExpressAppInitializer } from './app'
 import { Express } from 'express'
 import { RouteService } from './route/route'
 
+interface Duty {
+  id: string
+  name: string
+}
+
 describe('API', () => {
   let app: Express
 
@@ -61,7 +66,7 @@ describe('API', () => {
     expect(response.body.message).toBe('Duty not found')
   })
 
-  async function createDuty({ name = 'Name of Duty' } = {}) {
+  async function createDuty({ name = 'Name of Duty' } = {}): Promise<Duty> {
     const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)
     return response.body
@@ -81,7 +86,7 @@ describe('API', () => {
     return request(app).put(`/duties/${id}`).send({ name })
   }
 
-  async function listDuties() {
+  async function listDuties(): Promise<Duty[]> {
     const response = await callListDutiesApi()
     expect(response.status).toBe(200)
     return response.body
