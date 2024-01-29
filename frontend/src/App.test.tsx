@@ -86,7 +86,15 @@ describe('App', () => {
     const input = screen.getByDisplayValue('Initial Duty')
     fireEvent.change(input, { target: { value: 'Updated Duty' } })
 
-    // TODO: save edited value
+    const saveButton = screen.getByTestId(`save-button-${duty.id}`)
+    fireEvent.click(saveButton)
+
+    await screen.findByTestId(`edit-button-${duty.id}`)
+    expect(screen.getByText('Updated Duty')).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(1)
+    expect(savedDuties[0].name).toEqual('Updated Duty')
   })
 
   function addDutyViaUI(

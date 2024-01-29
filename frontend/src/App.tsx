@@ -1,5 +1,5 @@
 import { List, Input, Button, Typography, message } from 'antd'
-import { CheckOutlined, EditOutlined } from '@ant-design/icons'
+import { CheckOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons'
 import { DutyRemoteService } from './services/duty'
 import { Duty } from './models/duty'
 import { useEffect, useState } from 'react'
@@ -20,6 +20,10 @@ const App = ({
       setDuties(duties)
     })
   }, [dutyRemoteService])
+
+  const handleUpdateDuty = (duty: Duty) => {
+    return dutyRemoteService.updateDuty(duty)
+  }
 
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
@@ -54,13 +58,20 @@ const App = ({
           Add
         </Button>
       </div>
-      <DutiesList duties={duties} />
+      <DutiesList duties={duties} onUpdateDuty={handleUpdateDuty} />
     </div>
   )
 }
 
-const DutiesList = ({ duties }: { duties: Duty[] }) => {
+const DutiesList = ({
+  duties,
+  onUpdateDuty,
+}: {
+  duties: Duty[]
+  onUpdateDuty: (duty: Duty) => Promise<unknown>
+}) => {
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingValue, setEditingValue] = useState('')
 
   return (
     <List
@@ -70,14 +81,28 @@ const DutiesList = ({ duties }: { duties: Duty[] }) => {
       renderItem={(item) => (
         <List.Item
           actions={[
-            <Button
-              data-testid={`edit-button-${item.id}`}
-              shape="circle"
-              icon={<EditOutlined />}
-              onClick={() => {
-                setEditingId(item.id)
-              }}
-            />,
+            editingId === item.id ? (
+              <Button
+                data-testid={`save-button-${item.id}`}
+                shape="circle"
+                icon={<SaveOutlined />}
+                onClick={() => {
+                  onUpdateDuty({ ...item, name: editingValue }).then(() => {
+                    setEditingId(null)
+                  })
+                }}
+              ></Button>
+            ) : (
+              <Button
+                data-testid={`edit-button-${item.id}`}
+                shape="circle"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  setEditingValue(item.name)
+                  setEditingId(item.id)
+                }}
+              />
+            ),
             <Button
               shape="circle"
               icon={<CheckOutlined />}
@@ -86,7 +111,12 @@ const DutiesList = ({ duties }: { duties: Duty[] }) => {
           ]}
         >
           {editingId === item.id ? (
-            <Input value={item.name} />
+            <Input
+              value={editingValue}
+              onChange={(e) => {
+                setEditingValue(e.target.value)
+              }}
+            />
           ) : (
             <Text>{item.name}</Text>
           )}
