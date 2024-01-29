@@ -78,9 +78,8 @@ describe('App', () => {
     await dutyRemoteService.createDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
-    await screen.findByText('Initial Duty')
 
-    const editButton = screen.getByTestId('edit-button-0')
+    const editButton = await screen.findByTestId('edit-button-0')
     fireEvent.click(editButton)
 
     const input = screen.getByDisplayValue('Initial Duty')
