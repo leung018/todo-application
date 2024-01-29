@@ -21,6 +21,21 @@ const App = ({
     })
   }, [dutyRemoteService])
 
+  const handleCreateDuty = (name: string) => {
+    return dutyRemoteService
+      .createDuty(inputValue)
+      .then(() => {
+        setInputValue('')
+        return dutyRemoteService.listDuties()
+      })
+      .then((duties) => {
+        setDuties(duties)
+      })
+      .catch((error) => {
+        messageApi.error(error.message)
+      })
+  }
+
   const handleUpdateDuty = (duty: Duty) => {
     return dutyRemoteService.updateDuty(duty)
   }
@@ -41,18 +56,7 @@ const App = ({
           type="primary"
           style={{ marginTop: '5px' }}
           onClick={() => {
-            dutyRemoteService
-              .createDuty(inputValue)
-              .then(() => {
-                setInputValue('')
-                return dutyRemoteService.listDuties()
-              })
-              .then((duties) => {
-                setDuties(duties)
-              })
-              .catch((error) => {
-                messageApi.error(error.message)
-              })
+            handleCreateDuty(inputValue)
           }}
         >
           Add
