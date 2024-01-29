@@ -68,5 +68,6 @@ export class ExpressAppInitializer {
 const allowCors = (req: Request, res: Response, next: NextFunction): void => {
   res.set('Access-Control-Allow-Origin', '*')
   res.set('Access-Control-Allow-Headers', '*')
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, PATCH')
   next()
 }
