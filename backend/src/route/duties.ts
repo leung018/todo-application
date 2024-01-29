@@ -7,7 +7,7 @@ import {
 import { RouteService } from './route'
 import { Duty } from '../models/duty'
 import { ApplicationContext } from '../context'
-import { EntityNotFoundError, InvalidArgumentError } from '../utils/errors'
+import { RouteErrorHandler } from './util'
 
 export class DutiesRouteService extends RouteService {
   private dutyRepository: DutyRepository
@@ -39,12 +39,8 @@ export class DutiesRouteService extends RouteService {
     let duty: Duty
     try {
       duty = Duty.create({ name: req.body.name })
-    } catch (error) {
-      if (error instanceof InvalidArgumentError) {
-        res.status(400).send({ message: error.message })
-        return
-      }
-      throw error
+    } catch (err) {
+      return new RouteErrorHandler().handle(err, res)
     }
     await this.dutyRepository.create(duty)
     res.status(201).send(mapDutyToJSON(duty))
@@ -54,22 +50,9 @@ export class DutiesRouteService extends RouteService {
     let duty: Duty
     try {
       duty = new Duty({ id: req.params.id, name: req.body.name })
-    } catch (error) {
-      if (error instanceof InvalidArgumentError) {
-        res.status(400).send({ message: error.message })
-        return
-      }
-      throw error
-    }
-
-    try {
       await this.dutyRepository.update(duty)
-    } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        res.status(404).send({ message: error.message })
-        return
-      }
-      throw error
+    } catch (err) {
+      return new RouteErrorHandler().handle(err, res)
     }
     res.status(200).send()
   }
