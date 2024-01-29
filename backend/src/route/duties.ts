@@ -51,7 +51,17 @@ export class DutiesRouteService extends RouteService {
   }
 
   private updateDuty = async (req: Request, res: Response) => {
-    const duty = new Duty({ id: req.params.id, name: req.body.name })
+    let duty: Duty
+    try {
+      duty = new Duty({ id: req.params.id, name: req.body.name })
+    } catch (error) {
+      if (error instanceof InvalidArgumentError) {
+        res.status(400).send({ message: error.message })
+        return
+      }
+      throw error
+    }
+
     try {
       await this.dutyRepository.update(duty)
     } catch (error) {

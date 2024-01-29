@@ -79,6 +79,18 @@ describe('API', () => {
     expect(duties[0].name).toBe('Updated Name')
   })
 
+  it('should return 400 if invalid duty name for update api', async () => {
+    const createdDuty = await createDuty()
+
+    const response = await callUpdateDutyApi({
+      id: createdDuty.id,
+      name: '',
+    })
+
+    expect(response.status).toBe(400)
+    expect(response.body.message).toBe('Name of duty cannot be empty')
+  })
+
   async function createDuty({ name = 'Name of Duty' } = {}): Promise<Duty> {
     const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)
