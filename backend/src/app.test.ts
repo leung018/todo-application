@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, beforeAll } from '@jest/globals'
-import request from 'supertest'
+import request, { Response } from 'supertest'
 import { ExpressAppInitializer } from './app'
 import { Express } from 'express'
 import { RouteService } from './route/route'
@@ -24,8 +24,13 @@ describe('API', () => {
 
   it('should return bad request if invalid duty name', async () => {
     const response = await callCreateDutyApi({ name: '' })
-    expect(response.status).toBe(400)
-    expect(response.body.message).toBe('Name of duty cannot be empty')
+    assertErrorResponse(
+      {
+        status: 400,
+        message: 'Name of duty cannot be empty',
+      },
+      response,
+    )
   })
 
   it('should create single duty and list it', async () => {
@@ -62,8 +67,13 @@ describe('API', () => {
     const response = await callUpdateDutyApi({
       id: 'non-existing-id',
     })
-    expect(response.status).toBe(404)
-    expect(response.body.message).toBe('Duty not found')
+    assertErrorResponse(
+      {
+        status: 404,
+        message: 'Duty not found',
+      },
+      response,
+    )
   })
 
   it('should update duty', async () => {
@@ -87,8 +97,10 @@ describe('API', () => {
       name: '',
     })
 
-    expect(response.status).toBe(400)
-    expect(response.body.message).toBe('Name of duty cannot be empty')
+    assertErrorResponse(
+      { status: 400, message: 'Name of duty cannot be empty' },
+      response,
+    )
   })
 
   async function createDuty({ name = 'Name of Duty' } = {}): Promise<Duty> {
@@ -135,6 +147,17 @@ describe('API', () => {
     return request(app).delete('/duties')
   }
 })
+
+function assertErrorResponse(
+  expected: {
+    status: number
+    message: string
+  },
+  actualResponse: Response,
+) {
+  expect(actualResponse.status).toBe(expected.status)
+  expect(actualResponse.body.message).toBe(expected.message)
+}
 
 describe('Async error handling', () => {
   describe('should handle uncaught promise exception from routeService', () => {
