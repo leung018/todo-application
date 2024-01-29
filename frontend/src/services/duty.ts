@@ -23,11 +23,10 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
     }).then((res) => {
       if (res.ok) {
         return res.json()
-      } else {
-        return res.json().then((body) => {
-          throw new Error(body.message)
-        })
       }
+      return res.json().then((body) => {
+        throw new Error(body.message)
+      })
     })
   }
 
@@ -38,6 +37,13 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name: duty.name }),
+    }).then((res) => {
+      if (res.status === 200) {
+        return
+      }
+      return res.json().then((body) => {
+        throw new Error(body.message)
+      })
     })
   }
 
