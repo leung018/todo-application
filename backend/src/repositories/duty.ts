@@ -68,13 +68,11 @@ export class PostgresDutyRepository implements DutyRepository {
       )`
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async create(duty: Duty) {
     await this.sql`
       INSERT INTO duties ${this.sql(duty, 'id', 'name')}`
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update(duty: Duty): Promise<void> {
     const rows = await this.sql`
       UPDATE duties
@@ -99,7 +97,6 @@ export class PostgresDutyRepository implements DutyRepository {
     await this.sql`DELETE FROM duties`
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private mapRowToDuty(row: postgres.Row): Duty {
     return new Duty({
       id: row.id,
