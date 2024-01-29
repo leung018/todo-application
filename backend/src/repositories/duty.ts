@@ -76,7 +76,15 @@ export class PostgresDutyRepository implements DutyRepository {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async update(duty: Duty): Promise<void> {
-    // TODO: implement this
+    const rows = await this.sql`
+      UPDATE duties
+      SET name = ${duty.name}
+      WHERE id = ${duty.id}
+      RETURNING *
+    `
+    if (rows.length === 0) {
+      throw new EntityNotFoundError('Duty not found')
+    }
   }
 
   async listDuties() {
