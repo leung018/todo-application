@@ -66,6 +66,19 @@ describe('API', () => {
     expect(response.body.message).toBe('Duty not found')
   })
 
+  it('should update duty', async () => {
+    const createdDuty = await createDuty({ name: 'Original Name' })
+
+    await updateDuty({
+      id: createdDuty.id,
+      name: 'Updated Name',
+    })
+
+    const duties = await listDuties()
+    expect(duties[0].id).toBe(createdDuty.id)
+    expect(duties[0].name).toBe('Updated Name')
+  })
+
   async function createDuty({ name = 'Name of Duty' } = {}): Promise<Duty> {
     const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)
@@ -74,6 +87,11 @@ describe('API', () => {
 
   async function callCreateDutyApi({ name }: { name: string }) {
     return request(app).post('/duties').send({ name })
+  }
+
+  async function updateDuty({ id, name }: Duty): Promise<void> {
+    const response = await callUpdateDutyApi({ id, name })
+    expect(response.status).toBe(200)
   }
 
   async function callUpdateDutyApi({

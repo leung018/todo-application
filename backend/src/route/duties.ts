@@ -59,7 +59,9 @@ export class DutiesRouteService extends RouteService {
         res.status(404).send({ message: error.message })
         return
       }
+      throw error
     }
+    res.status(200).send()
   }
 
   private listDuties = async (req: Request, res: Response) => {
