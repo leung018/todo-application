@@ -1,4 +1,6 @@
 import { Duty } from '../models/duty'
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { EntityNotFoundError } from '../utils/errors'
 import { PostgresContext, newPostgresClient } from './util'
 import postgres from 'postgres'
 
@@ -13,6 +15,11 @@ export interface DutyRepository {
   // But for the size of this application, it is fine.
 
   deleteAllDuties(): Promise<void>
+
+  /**
+   * @throws {EntityNotFoundError} if duty with given id does not exist
+   */
+  update(duty: Duty): Promise<void>
 }
 
 export class InMemoryDutyRepository implements DutyRepository {
@@ -28,6 +35,11 @@ export class InMemoryDutyRepository implements DutyRepository {
 
   async deleteAllDuties() {
     this.duties = []
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async update(duty: Duty) {
+    // TODO: implement this
   }
 }
 
@@ -57,6 +69,11 @@ export class PostgresDutyRepository implements DutyRepository {
   async create(duty: Duty) {
     await this.sql`
       INSERT INTO duties ${this.sql(duty, 'id', 'name')}`
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async update(duty: Duty): Promise<void> {
+    // TODO: implement this
   }
 
   async listDuties() {
