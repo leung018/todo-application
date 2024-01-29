@@ -60,6 +60,8 @@ const App = ({
 }
 
 const DutiesList = ({ duties }: { duties: Duty[] }) => {
+  const [editingId, setEditingId] = useState<string | null>(null)
+
   return (
     <List
       header={<Title level={4}>Duties List</Title>}
@@ -69,9 +71,12 @@ const DutiesList = ({ duties }: { duties: Duty[] }) => {
         <List.Item
           actions={[
             <Button
+              data-testid={`edit-button-${item.id}`}
               shape="circle"
               icon={<EditOutlined />}
-              onClick={() => {}}
+              onClick={() => {
+                setEditingId(item.id)
+              }}
             />,
             <Button
               shape="circle"
@@ -80,7 +85,11 @@ const DutiesList = ({ duties }: { duties: Duty[] }) => {
             />,
           ]}
         >
-          <Text>{item.name}</Text>
+          {editingId === item.id ? (
+            <Input value={item.name} />
+          ) : (
+            <Text>{item.name}</Text>
+          )}
         </List.Item>
       )}
     />

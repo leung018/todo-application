@@ -73,6 +73,22 @@ describe('App', () => {
     expect(savedDuties).toHaveLength(0)
   })
 
+  it('should able to edit duty', async () => {
+    const dutyRemoteService = new InMemoryDutyService()
+    const duty = await dutyRemoteService.createDuty('Initial Duty')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+    await screen.findByText('Initial Duty')
+
+    const editButton = screen.getByTestId(`edit-button-${duty.id}`)
+    fireEvent.click(editButton)
+
+    const input = screen.getByDisplayValue('Initial Duty')
+    fireEvent.change(input, { target: { value: 'Updated Duty' } })
+
+    // TODO: save edited value
+  })
+
   function addDutyViaUI(
     screen: Screen,
     { name = 'Duty 1' }: { name?: string } = {},
