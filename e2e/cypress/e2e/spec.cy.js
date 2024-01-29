@@ -34,5 +34,8 @@ describe('e2e tests', () => {
     cy.findByTestId('save-button-0').click()
 
     cy.findByText('Duty 1 Updated').should('exist')
+
+    cy.visit('/')
+    cy.findByText('Duty 1 Updated').should('exist')
   })
 })
