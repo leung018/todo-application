@@ -6,8 +6,7 @@ describe('e2e tests', () => {
   it('should create duty successfully', () => {
     cy.visit('/')
 
-    cy.findByPlaceholderText('Add new duty').type('Duty 1')
-    cy.findByText('Add').click()
+    cy.createDuty({ name: 'Duty 1' })
 
     cy.findByText('Duty 1').should('exist')
 
@@ -26,8 +25,7 @@ describe('e2e tests', () => {
   it('should update created duty', () => {
     cy.visit('/')
 
-    cy.findByPlaceholderText('Add new duty').type('Duty 1')
-    cy.findByText('Add').click()
+    cy.createDuty({ name: 'Duty 1' })
 
     cy.findByTestId('edit-button-0').click()
     cy.findByDisplayValue('Duty 1').type(' Updated')
@@ -42,8 +40,7 @@ describe('e2e tests', () => {
   it('should display error message when updating duty to empty', () => {
     cy.visit('/')
 
-    cy.findByPlaceholderText('Add new duty').type('Duty 1')
-    cy.findByText('Add').click()
+    cy.createDuty({ name: 'Duty 1' })
 
     cy.findByTestId('edit-button-0').click()
     cy.findByDisplayValue('Duty 1').clear()
