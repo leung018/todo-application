@@ -7,6 +7,7 @@ import {
 } from '@testing-library/react'
 import App from './App'
 import { DutyRemoteService, InMemoryDutyService } from './services/duty'
+import { DUTY_MAX_NAME_LENGTH } from './models/duty'
 
 describe('App', () => {
   beforeAll(() => {
@@ -90,10 +91,12 @@ describe('App', () => {
   it('should prevent adding duty of very long name', async () => {
     render(<App dutyRemoteService={dutyRemoteService} />)
 
-    addDutyViaUI(screen, { name: 'a'.repeat(101) })
+    addDutyViaUI(screen, { name: 'a'.repeat(DUTY_MAX_NAME_LENGTH + 1) })
 
     expect(
-      await screen.findByText('Duty name should not exceed 100 characters.'),
+      await screen.findByText(
+        `Duty name should not exceed ${DUTY_MAX_NAME_LENGTH} characters.`,
+      ),
     ).toBeVisible()
 
     const savedDuties = await dutyRemoteService.listDuties()
@@ -180,14 +183,16 @@ describe('App', () => {
 
     const input = screen.getByDisplayValue('Initial Duty')
     fireEvent.change(input, {
-      target: { value: 'a'.repeat(101) },
+      target: { value: 'a'.repeat(DUTY_MAX_NAME_LENGTH + 1) },
     })
 
     const saveButton = screen.getByTestId('save-button-0')
     fireEvent.click(saveButton)
 
     expect(
-      await screen.findByText('Duty name should not exceed 100 characters.'),
+      await screen.findByText(
+        `Duty name should not exceed ${DUTY_MAX_NAME_LENGTH} characters.`,
+      ),
     ).toBeVisible()
 
     const savedDuties = await dutyRemoteService.listDuties()

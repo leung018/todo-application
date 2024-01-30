@@ -1,7 +1,7 @@
 import { List, Input, Button, Typography, message } from 'antd'
 import { CheckOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons'
 import { DutyRemoteService } from './services/duty'
-import { Duty } from './models/duty'
+import { DUTY_MAX_NAME_LENGTH, Duty } from './models/duty'
 import { useEffect, useState } from 'react'
 
 const { Text, Title } = Typography
@@ -26,8 +26,10 @@ const App = ({
       messageApi.info('Please input the duty.')
       return
     }
-    if (inputValue.length > 100) {
-      messageApi.info('Duty name should not exceed 100 characters.')
+    if (inputValue.length > DUTY_MAX_NAME_LENGTH) {
+      messageApi.info(
+        `Duty name should not exceed ${DUTY_MAX_NAME_LENGTH} characters.`,
+      )
       return
     }
 
@@ -50,8 +52,10 @@ const App = ({
       messageApi.info('Cannot edit duty to empty.')
       return
     }
-    if (duty.name.length > 100) {
-      messageApi.info('Duty name should not exceed 100 characters.')
+    if (duty.name.length > DUTY_MAX_NAME_LENGTH) {
+      messageApi.info(
+        `Duty name should not exceed ${DUTY_MAX_NAME_LENGTH} characters.`,
+      )
       return
     }
 
