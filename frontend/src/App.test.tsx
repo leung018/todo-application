@@ -6,7 +6,7 @@ import {
   Screen,
 } from '@testing-library/react'
 import App from './App'
-import { InMemoryDutyService } from './services/duty'
+import { DutyRemoteService, InMemoryDutyService } from './services/duty'
 
 describe('App', () => {
   beforeAll(() => {
@@ -22,8 +22,13 @@ describe('App', () => {
     })
   })
 
+  let dutyRemoteService: DutyRemoteService
+
+  beforeEach(() => {
+    dutyRemoteService = new InMemoryDutyService()
+  })
+
   it('should display created duties', async () => {
-    const dutyRemoteService = new InMemoryDutyService()
     await dutyRemoteService.createDuty('Sample Duty 1')
     await dutyRemoteService.createDuty('Sample Duty 2')
 
@@ -33,7 +38,6 @@ describe('App', () => {
   })
 
   it('should create new duty', async () => {
-    const dutyRemoteService = new InMemoryDutyService()
     await dutyRemoteService.createDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
@@ -58,7 +62,6 @@ describe('App', () => {
   })
 
   it('should handle error when remote service rejected to create duty', async () => {
-    const dutyRemoteService = new InMemoryDutyService()
     dutyRemoteService.createDuty = () => {
       return Promise.reject(new Error('Create duty failed'))
     }
@@ -74,7 +77,6 @@ describe('App', () => {
   })
 
   it('should able to edit duty', async () => {
-    const dutyRemoteService = new InMemoryDutyService()
     await dutyRemoteService.createDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
@@ -97,7 +99,6 @@ describe('App', () => {
   })
 
   it('should handle error when remote service rejected to update duty', async () => {
-    const dutyRemoteService = new InMemoryDutyService()
     dutyRemoteService.updateDuty = () => {
       return Promise.reject(new Error('Update duty failed'))
     }
@@ -112,6 +113,34 @@ describe('App', () => {
     fireEvent.click(saveButton)
 
     expect(await screen.findByText('Update duty failed')).toBeVisible()
+  })
+
+  it('should able to complete duty', async () => {
+    await dutyRemoteService.createDuty('Initial Duty')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    const completeButton = await screen.findByTestId('complete-button-0')
+    fireEvent.click(completeButton)
+
+    await waitFor(() => expect(screen.queryByText('Initial Duty')).toBeNull())
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(0)
+  })
+
+  it('should handle error when remote service rejected to complete duty', async () => {
+    dutyRemoteService.completeDuty = () => {
+      return Promise.reject(new Error('Complete duty failed'))
+    }
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+    addDutyViaUI(screen)
+
+    const completeButton = await screen.findByTestId('complete-button-0')
+    fireEvent.click(completeButton)
+
+    expect(await screen.findByText('Complete duty failed')).toBeVisible()
   })
 
   function addDutyViaUI(
