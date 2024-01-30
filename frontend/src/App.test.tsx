@@ -37,7 +37,7 @@ describe('App', () => {
     screen.getByText('Sample Duty 2')
   })
 
-  it('should create new duty', async () => {
+  it('should able to create new duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
@@ -84,15 +84,25 @@ describe('App', () => {
     const editButton = await screen.findByTestId('edit-button-0')
     fireEvent.click(editButton)
 
+    // Edit button should be hidden in edit mode
+    await waitFor(() =>
+      expect(screen.queryByTestId('edit-button-0')).toBeNull(),
+    )
+
+    // Input the new duty name
     const input = screen.getByDisplayValue('Initial Duty')
     fireEvent.change(input, { target: { value: 'Updated Duty' } })
 
+    // Click save button
     const saveButton = screen.getByTestId('save-button-0')
     fireEvent.click(saveButton)
 
+    // Assert UI effects after save
     await screen.findByTestId('edit-button-0')
+    expect(screen.queryByTestId('save-button-0')).toBeNull()
     expect(screen.getByText('Updated Duty')).toBeVisible()
 
+    // Assert the duty is updated in remote service
     const savedDuties = await dutyRemoteService.listDuties()
     expect(savedDuties).toHaveLength(1)
     expect(savedDuties[0].name).toEqual('Updated Duty')
