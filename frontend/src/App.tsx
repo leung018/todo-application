@@ -26,6 +26,10 @@ const App = ({
       messageApi.info('Please input the duty.')
       return
     }
+    if (inputValue.length > 100) {
+      messageApi.info('Duty name should not exceed 100 characters.')
+      return
+    }
 
     return dutyRemoteService
       .createDuty(inputValue)

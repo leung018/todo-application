@@ -87,6 +87,19 @@ describe('App', () => {
     expect(savedDuties).toHaveLength(0)
   })
 
+  it('should prevent adding duty of very long name', async () => {
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    addDutyViaUI(screen, { name: 'a'.repeat(101) })
+
+    expect(
+      await screen.findByText('Duty name should not exceed 100 characters.'),
+    ).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(0)
+  })
+
   it('should able to edit duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 
