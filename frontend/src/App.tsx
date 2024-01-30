@@ -21,7 +21,7 @@ const App = ({
     })
   }, [dutyRemoteService])
 
-  const handleCreateDuty = (name: string) => {
+  const handleCreateDuty = () => {
     return dutyRemoteService
       .createDuty(inputValue)
       .then(() => {
@@ -80,7 +80,7 @@ const App = ({
           type="primary"
           style={{ marginTop: '5px' }}
           onClick={() => {
-            handleCreateDuty(inputValue)
+            handleCreateDuty()
           }}
         >
           Add
