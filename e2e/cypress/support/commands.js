@@ -25,7 +25,7 @@ import '@testing-library/cypress/add-commands'
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('createDuty', ({ name = 'My Duty' } = {}) => {
+Cypress.Commands.add('addDuty', ({ name = 'My Duty' } = {}) => {
   cy.findByPlaceholderText('Add new duty').type(name)
   cy.findByText('Add').click()
 })
