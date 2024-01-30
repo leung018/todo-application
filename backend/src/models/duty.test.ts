@@ -36,4 +36,12 @@ describe('Duty', () => {
     duty.name = 'Updated New Name'
     expect(duty.name).toBe('Updated New Name')
   })
+
+  it('should trim the spaces of input name', () => {
+    const duty = Duty.createNull({ name: '  Duty 1  ' })
+    expect(duty.name).toBe('Duty 1')
+
+    duty.name = '  Updated Duty   '
+    expect(duty.name).toBe('Updated Duty')
+  })
 })
