@@ -6,6 +6,7 @@ export interface RouteErrorTemplate {
   statusCode: number
 }
 
+// This class is tested in a test suite of app.test.ts
 export class RouteErrorHandler {
   static defaultRouteErrorTemplates: ReadonlyArray<RouteErrorTemplate> = [
     {
