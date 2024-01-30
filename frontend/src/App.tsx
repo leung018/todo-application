@@ -68,7 +68,7 @@ const App = ({
       })
   }
 
-  const handleCompleteDuty = (dutyId: string) => {
+  const handleCompleteDuty = async (dutyId: string) => {
     return dutyRemoteService
       .completeDuty(dutyId)
       .then(() => {
