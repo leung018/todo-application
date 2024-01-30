@@ -112,6 +112,11 @@ describe('API', () => {
     expect(duties.length).toBe(0)
   })
 
+  it('should return 404 if duty not found for delete api', async () => {
+    const response = await callDeleteDutyApi('non-existing-id')
+    assertErrorResponse({ status: 404, message: 'Duty not found' }, response)
+  })
+
   async function createDuty({ name = 'Name of Duty' } = {}): Promise<Duty> {
     const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)

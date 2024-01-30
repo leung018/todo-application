@@ -21,6 +21,9 @@ export interface DutyRepository {
    */
   update(duty: Duty): Promise<void>
 
+  /**
+   * @throws {EntityNotFoundError} if duty with given id does not exist
+   */
   deleteDuty(id: string): Promise<void>
 }
 
@@ -48,7 +51,11 @@ export class InMemoryDutyRepository implements DutyRepository {
   }
 
   async deleteDuty(id: string) {
-    this.duties = this.duties.filter((d) => d.id !== id)
+    const index = this.duties.findIndex((d) => d.id === id)
+    if (index === -1) {
+      throw new EntityNotFoundError('Duty not found')
+    }
+    this.duties.splice(index, 1)
   }
 }
 

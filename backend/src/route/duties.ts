@@ -59,7 +59,11 @@ export class DutiesRouteService extends RouteService {
   }
 
   private deleteDuty = async (req: Request, res: Response) => {
-    await this.dutyRepository.deleteDuty(req.params.id)
+    try {
+      await this.dutyRepository.deleteDuty(req.params.id)
+    } catch (err) {
+      return new RouteErrorHandler().handle(err, res)
+    }
     res.status(204).send()
   }
 
