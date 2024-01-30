@@ -76,6 +76,17 @@ describe('App', () => {
     expect(savedDuties).toHaveLength(0)
   })
 
+  it('should prevent adding empty duty', async () => {
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    addDutyViaUI(screen, { name: '' })
+
+    expect(await screen.findByText('Please input the duty.')).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(0)
+  })
+
   it('should able to edit duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 

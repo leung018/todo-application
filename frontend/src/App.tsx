@@ -21,7 +21,12 @@ const App = ({
     })
   }, [dutyRemoteService])
 
-  const handleCreateDuty = () => {
+  const handleCreateDuty = async () => {
+    if (!inputValue) {
+      messageApi.info('Please input the duty.')
+      return
+    }
+
     return dutyRemoteService
       .createDuty(inputValue)
       .then(() => {
