@@ -80,7 +80,7 @@ describe('App', () => {
   it('should prevent adding empty duty', async () => {
     render(<App dutyRemoteService={dutyRemoteService} />)
 
-    addDutyViaUI(screen, { name: '' })
+    addDutyViaUI(screen, { name: '   ' })
 
     expect(await screen.findByText('Please input the duty.')).toBeVisible()
 
@@ -161,7 +161,7 @@ describe('App', () => {
     fireEvent.click(editButton)
 
     const input = screen.getByDisplayValue('Initial Duty')
-    fireEvent.change(input, { target: { value: '' } })
+    fireEvent.change(input, { target: { value: '    ' } })
 
     const saveButton = screen.getByTestId('save-button-0')
     fireEvent.click(saveButton)

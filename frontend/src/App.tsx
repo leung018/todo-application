@@ -22,7 +22,7 @@ const App = ({
   }, [dutyRemoteService])
 
   const handleCreateDuty = async () => {
-    if (!inputValue) {
+    if (!inputValue.trim()) {
       messageApi.info('Please input the duty.')
       return
     }
@@ -48,7 +48,7 @@ const App = ({
   }
 
   const handleUpdateDuty = async (duty: Duty) => {
-    if (!duty.name) {
+    if (!duty.name.trim()) {
       messageApi.info('Cannot edit duty to empty.')
       return
     }
