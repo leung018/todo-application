@@ -2,7 +2,7 @@ import { List, Input, Button, Typography, message } from 'antd'
 import { CheckOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons'
 import { DutyRemoteService } from './services/duty'
 import { DUTY_MAX_NAME_LENGTH, Duty } from './models/duty'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 const { Text, Title } = Typography
 
@@ -12,21 +12,24 @@ const App = ({
   dutyRemoteService: DutyRemoteService
 }) => {
   const [duties, setDuties] = useState<Duty[]>([])
-  const [inputValue, setInputValue] = useState('')
   const [messageApi, contextHolder] = message.useMessage()
 
-  useEffect(() => {
-    dutyRemoteService.listDuties().then((duties) => {
-      setDuties(duties)
+  const loadDutiesFromRemoteToState = useCallback(async () => {
+    return dutyRemoteService.listDuties().then((duties) => {
+      setDuties([...duties])
     })
   }, [dutyRemoteService])
 
-  const handleCreateDuty = async () => {
-    if (!inputValue.trim()) {
+  useEffect(() => {
+    loadDutiesFromRemoteToState()
+  }, [loadDutiesFromRemoteToState])
+
+  const handleCreateDuty = async (dutyName: string) => {
+    if (!dutyName.trim()) {
       messageApi.info('Please input the duty.')
       return
     }
-    if (inputValue.length > DUTY_MAX_NAME_LENGTH) {
+    if (dutyName.length > DUTY_MAX_NAME_LENGTH) {
       messageApi.info(
         `Duty name should not exceed ${DUTY_MAX_NAME_LENGTH} characters.`,
       )
@@ -34,13 +37,9 @@ const App = ({
     }
 
     return dutyRemoteService
-      .createDuty(inputValue)
+      .createDuty(dutyName)
       .then(() => {
-        setInputValue('')
-        return dutyRemoteService.listDuties()
-      })
-      .then((duties) => {
-        setDuties(duties)
+        return loadDutiesFromRemoteToState()
       })
       .catch((error) => {
         messageApi.error(error.message)
@@ -62,24 +61,18 @@ const App = ({
     return dutyRemoteService
       .updateDuty(duty)
       .then(() => {
-        return dutyRemoteService.listDuties()
-      })
-      .then((duties) => {
-        setDuties(duties)
+        return loadDutiesFromRemoteToState()
       })
       .catch((error) => {
         messageApi.error(error.message)
       })
   }
 
-  const handleCompleteDuty = (dutyId: string) => {
+  const handleCompleteDuty = async (dutyId: string) => {
     return dutyRemoteService
       .completeDuty(dutyId)
       .then(() => {
-        return dutyRemoteService.listDuties()
-      })
-      .then((duties) => {
-        setDuties(duties)
+        return loadDutiesFromRemoteToState()
       })
       .catch((error) => {
         messageApi.error(error.message)
@@ -89,34 +82,43 @@ const App = ({
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       {contextHolder}
-      {/* TODO: It is better to refactor below into separate DutyInput component.
-       * However, it will fail the unit test in a way that new duty is not displayed while it keep passing the e2e test.
-       * I have no idea why it is not working in unit test.
-       */}
-      <div style={{ marginBottom: '24px' }}>
-        <Input
-          placeholder="Add new duty"
-          style={{ width: '100%' }}
-          value={inputValue}
-          onChange={(e) => {
-            setInputValue(e.target.value)
-          }}
-        />
-        <Button
-          type="primary"
-          style={{ marginTop: '5px' }}
-          onClick={() => {
-            handleCreateDuty()
-          }}
-        >
-          Add
-        </Button>
-      </div>
+      <DutyInput onCreateDuty={handleCreateDuty} />
       <DutiesList
         duties={duties}
         onUpdateDuty={handleUpdateDuty}
         onCompleteDuty={handleCompleteDuty}
       />
+    </div>
+  )
+}
+
+const DutyInput = ({
+  onCreateDuty,
+}: {
+  onCreateDuty: (dutyName: string) => Promise<unknown>
+}) => {
+  const [inputValue, setInputValue] = useState('')
+  return (
+    <div style={{ marginBottom: '24px' }}>
+      <Input
+        placeholder="Add new duty"
+        style={{ width: '100%' }}
+        value={inputValue}
+        onChange={(e) => {
+          setInputValue(e.target.value)
+        }}
+      />
+      <Button
+        type="primary"
+        style={{ marginTop: '5px' }}
+        onClick={() => {
+          onCreateDuty(inputValue).then(() => {
+            setInputValue('')
+          })
+        }}
+      >
+        Add
+      </Button>
     </div>
   )
 }
