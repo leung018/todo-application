@@ -37,7 +37,7 @@ describe('App', () => {
     screen.getByText('Sample Duty 2')
   })
 
-  it('should create new duty', async () => {
+  it('should able to create new duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
