@@ -129,6 +129,21 @@ describe('App', () => {
     expect(savedDuties).toHaveLength(0)
   })
 
+  it('should handle error when remote service rejected to complete duty', async () => {
+    const dutyRemoteService = new InMemoryDutyService()
+    dutyRemoteService.completeDuty = () => {
+      return Promise.reject(new Error('Complete duty failed'))
+    }
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+    addDutyViaUI(screen)
+
+    const completeButton = await screen.findByTestId('complete-button-0')
+    fireEvent.click(completeButton)
+
+    expect(await screen.findByText('Complete duty failed')).toBeVisible()
+  })
+
   function addDutyViaUI(
     screen: Screen,
     { name = 'Duty 1' }: { name?: string } = {},
