@@ -38,7 +38,7 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
       },
       body: JSON.stringify({ name: duty.name }),
     }).then((res) => {
-      if (res.status === 200) {
+      if (res.ok) {
         return
       }
       return res.json().then((body) => {

@@ -55,7 +55,7 @@ export class DutiesRouteService extends RouteService {
     } catch (err) {
       return new RouteErrorHandler().handle(err, res)
     }
-    res.status(200).send()
+    res.status(204).send()
   }
 
   private deleteDuty = async (req: Request, res: Response) => {

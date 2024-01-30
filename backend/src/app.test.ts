@@ -145,7 +145,7 @@ describe('API', () => {
 
   async function updateDuty({ id, name }: Duty): Promise<void> {
     const response = await callUpdateDutyApi({ id, name })
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(204)
   }
 
   async function callUpdateDutyApi({
