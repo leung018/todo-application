@@ -7,6 +7,7 @@ import {
 } from '@testing-library/react'
 import App from './App'
 import { DutyRemoteService, InMemoryDutyService } from './services/duty'
+import { DUTY_MAX_NAME_LENGTH } from './models/duty'
 
 describe('App', () => {
   beforeAll(() => {
@@ -37,7 +38,7 @@ describe('App', () => {
     screen.getByText('Sample Duty 2')
   })
 
-  it('should able to create new duty', async () => {
+  it('should able to add duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
@@ -71,6 +72,32 @@ describe('App', () => {
     addDutyViaUI(screen)
 
     expect(await screen.findByText('Create duty failed')).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(0)
+  })
+
+  it('should prevent adding empty duty', async () => {
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    addDutyViaUI(screen, { name: '   ' })
+
+    expect(await screen.findByText('Please input the duty.')).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(0)
+  })
+
+  it('should prevent adding duty of very long name', async () => {
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    addDutyViaUI(screen, { name: 'a'.repeat(DUTY_MAX_NAME_LENGTH + 1) })
+
+    expect(
+      await screen.findByText(
+        `Duty name should not exceed ${DUTY_MAX_NAME_LENGTH} characters.`,
+      ),
+    ).toBeVisible()
 
     const savedDuties = await dutyRemoteService.listDuties()
     expect(savedDuties).toHaveLength(0)
@@ -123,6 +150,54 @@ describe('App', () => {
     fireEvent.click(saveButton)
 
     expect(await screen.findByText('Update duty failed')).toBeVisible()
+  })
+
+  it('should prevent editing existing duty to empty', async () => {
+    await dutyRemoteService.createDuty('Initial Duty')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    const editButton = await screen.findByTestId('edit-button-0')
+    fireEvent.click(editButton)
+
+    const input = screen.getByDisplayValue('Initial Duty')
+    fireEvent.change(input, { target: { value: '    ' } })
+
+    const saveButton = screen.getByTestId('save-button-0')
+    fireEvent.click(saveButton)
+
+    expect(await screen.findByText('Cannot edit duty to empty.')).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(1)
+    expect(savedDuties[0].name).toEqual('Initial Duty')
+  })
+
+  it('should prevent editing existing duty to very long name', async () => {
+    await dutyRemoteService.createDuty('Initial Duty')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    const editButton = await screen.findByTestId('edit-button-0')
+    fireEvent.click(editButton)
+
+    const input = screen.getByDisplayValue('Initial Duty')
+    fireEvent.change(input, {
+      target: { value: 'a'.repeat(DUTY_MAX_NAME_LENGTH + 1) },
+    })
+
+    const saveButton = screen.getByTestId('save-button-0')
+    fireEvent.click(saveButton)
+
+    expect(
+      await screen.findByText(
+        `Duty name should not exceed ${DUTY_MAX_NAME_LENGTH} characters.`,
+      ),
+    ).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(1)
+    expect(savedDuties[0].name).toEqual('Initial Duty')
   })
 
   it('should able to complete duty', async () => {
