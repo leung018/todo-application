@@ -33,6 +33,7 @@ export class DutiesRouteService extends RouteService {
     this.get('/', this.listDuties)
     this.delete('/', this.deleteAllDuties)
     this.put('/:id', this.updateDuty)
+    this.delete('/:id', this.deleteDuty)
   }
 
   private createDuty = async (req: Request, res: Response) => {
@@ -55,6 +56,15 @@ export class DutiesRouteService extends RouteService {
       return new RouteErrorHandler().handle(err, res)
     }
     res.status(200).send()
+  }
+
+  private deleteDuty = async (req: Request, res: Response) => {
+    try {
+      await this.dutyRepository.deleteDuty(req.params.id)
+    } catch (err) {
+      return new RouteErrorHandler().handle(err, res)
+    }
+    res.status(204).send()
   }
 
   private listDuties = async (req: Request, res: Response) => {

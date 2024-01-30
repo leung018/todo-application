@@ -20,6 +20,11 @@ export interface DutyRepository {
    * @throws {EntityNotFoundError} if duty with given id does not exist
    */
   update(duty: Duty): Promise<void>
+
+  /**
+   * @throws {EntityNotFoundError} if duty with given id does not exist
+   */
+  deleteDuty(id: string): Promise<void>
 }
 
 export class InMemoryDutyRepository implements DutyRepository {
@@ -43,6 +48,14 @@ export class InMemoryDutyRepository implements DutyRepository {
       throw new EntityNotFoundError('Duty not found')
     }
     this.duties[index] = duty
+  }
+
+  async deleteDuty(id: string) {
+    const index = this.duties.findIndex((d) => d.id === id)
+    if (index === -1) {
+      throw new EntityNotFoundError('Duty not found')
+    }
+    this.duties.splice(index, 1)
   }
 }
 
@@ -95,6 +108,17 @@ export class PostgresDutyRepository implements DutyRepository {
 
   async deleteAllDuties() {
     await this.sql`DELETE FROM duties`
+  }
+
+  async deleteDuty(id: string) {
+    const rows = await this.sql`
+      DELETE FROM duties
+      WHERE id = ${id}
+      RETURNING *
+    `
+    if (rows.length === 0) {
+      throw new EntityNotFoundError('Duty not found')
+    }
   }
 
   private mapRowToDuty(row: postgres.Row): Duty {
