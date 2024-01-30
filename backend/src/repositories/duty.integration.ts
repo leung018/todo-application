@@ -69,13 +69,16 @@ describe('PostgresDutyRepository', () => {
   })
 
   it('should delete duty', async () => {
-    const duty = Duty.createNull()
-    await repo.create(duty)
+    const duty1 = Duty.createNull()
+    const duty2 = Duty.createNull()
 
-    await repo.deleteDuty(duty.id)
+    await repo.create(duty1)
+    await repo.create(duty2)
+
+    await repo.deleteDuty(duty1.id)
 
     const duties = await repo.listDuties()
-    expect(duties).toEqual([])
+    expect(duties).toEqual([duty2])
   })
 
   it('should throw error when deleting non-existing duty', async () => {
