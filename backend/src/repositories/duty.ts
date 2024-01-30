@@ -110,9 +110,15 @@ export class PostgresDutyRepository implements DutyRepository {
     await this.sql`DELETE FROM duties`
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async deleteDuty(id: string) {
-    // TODO: Implement this
+    const rows = await this.sql`
+      DELETE FROM duties
+      WHERE id = ${id}
+      RETURNING *
+    `
+    if (rows.length === 0) {
+      throw new EntityNotFoundError('Duty not found')
+    }
   }
 
   private mapRowToDuty(row: postgres.Row): Duty {

@@ -68,6 +68,21 @@ describe('PostgresDutyRepository', () => {
     )
   })
 
+  it('should delete duty', async () => {
+    const duty = Duty.createNull()
+    await repo.create(duty)
+
+    await repo.deleteDuty(duty.id)
+
+    const duties = await repo.listDuties()
+    expect(duties).toEqual([])
+  })
+
+  it('should throw error when deleting non-existing duty', async () => {
+    const duty = await Duty.createNull()
+    await expect(repo.deleteDuty(duty.id)).rejects.toThrow(EntityNotFoundError)
+  })
+
   afterAll(async () => {
     repo.close()
   })
