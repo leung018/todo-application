@@ -297,4 +297,28 @@ describe('RouteErrorHandler', () => {
       response,
     )
   })
+
+  it('should custom response contain custom message if template provided it', async () => {
+    const app = addRootGetRoute(async (req, res) => {
+      try {
+        throw new CustomError('Default message')
+      } catch (err) {
+        return new RouteErrorHandler([
+          {
+            statusCode: 402,
+            typeOfError: CustomError,
+            customMessage: 'Custom message',
+          },
+        ]).handle(err, res)
+      }
+    })
+    const response = await request(app).get('/')
+    assertErrorResponse(
+      {
+        status: 402,
+        message: 'Custom message',
+      },
+      response,
+    )
+  })
 })

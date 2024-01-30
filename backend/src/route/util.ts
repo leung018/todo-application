@@ -4,6 +4,7 @@ import { EntityNotFoundError, InvalidArgumentError } from '../utils/errors'
 export interface RouteErrorTemplate {
   typeOfError: new (...args: never[]) => Error
   statusCode: number
+  customMessage?: string
 }
 
 // This class is tested in a test suite of app.test.ts
@@ -30,7 +31,8 @@ export class RouteErrorHandler {
   handle(err: unknown, res: Response) {
     for (const template of this.routeErrorTemplates) {
       if (err instanceof template.typeOfError) {
-        res.status(template.statusCode).send({ message: err.message })
+        const message = template.customMessage ?? err.message
+        res.status(template.statusCode).send({ message: message })
         return
       }
     }
