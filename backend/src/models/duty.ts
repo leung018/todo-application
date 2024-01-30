@@ -17,7 +17,7 @@ export class Duty {
 
   constructor({ id, name }: { id: string; name: string }) {
     this.id = id
-    this._name = name
+    this._name = name.trim()
     this.validateName(name)
   }
 
@@ -38,6 +38,6 @@ export class Duty {
 
   set name(name: string) {
     this.validateName(name)
-    this._name = name
+    this._name = name.trim()
   }
 }

@@ -26,14 +26,24 @@ describe('Duty', () => {
   })
 
   it('should expect update of name has same validation as creation', () => {
-    const duty = Duty.createNull()
+    const duty = Duty.createNull({ name: 'Original Name' })
     expect(() => (duty.name = ' ')).toThrow(InvalidArgumentError)
     expect(() => (duty.name = 'a'.repeat(251))).toThrow(InvalidArgumentError)
+
+    expect(duty.name).toBe('Original Name')
   })
 
   it('should update name', () => {
     const duty = Duty.createNull()
     duty.name = 'Updated New Name'
     expect(duty.name).toBe('Updated New Name')
+  })
+
+  it('should trim the spaces of input name', () => {
+    const duty = Duty.createNull({ name: '  Duty 1  ' })
+    expect(duty.name).toBe('Duty 1')
+
+    duty.name = '  Updated Duty   '
+    expect(duty.name).toBe('Updated Duty')
   })
 })
