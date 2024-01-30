@@ -67,6 +67,10 @@ const App = ({
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       {contextHolder}
+      {/* TODO: It is better to refactor below into separate DutyInput component.
+       * However, it will fail the unit test in a way that new duty is not displayed while it keep passing the e2e test.
+       * I have no idea why it is not working in unit test.
+       */}
       <div style={{ marginBottom: '24px' }}>
         <Input
           placeholder="Add new duty"
