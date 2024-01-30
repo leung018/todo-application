@@ -103,6 +103,15 @@ describe('API', () => {
     )
   })
 
+  it('should delete duty', async () => {
+    const createdDuty = await createDuty()
+
+    await deleteDuty(createdDuty.id)
+
+    const duties = await listDuties()
+    expect(duties.length).toBe(0)
+  })
+
   async function createDuty({ name = 'Name of Duty' } = {}): Promise<Duty> {
     const response = await callCreateDutyApi({ name })
     expect(response.status).toBe(201)
@@ -136,6 +145,15 @@ describe('API', () => {
 
   async function callListDutiesApi() {
     return request(app).get('/duties')
+  }
+
+  async function deleteDuty(id: string) {
+    const response = await callDeleteDutyApi(id)
+    expect(response.status).toBe(204)
+  }
+
+  async function callDeleteDutyApi(id: string) {
+    return request(app).delete(`/duties/${id}`)
   }
 
   async function deleteAllDuties() {

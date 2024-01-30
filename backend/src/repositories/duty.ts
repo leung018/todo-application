@@ -20,6 +20,8 @@ export interface DutyRepository {
    * @throws {EntityNotFoundError} if duty with given id does not exist
    */
   update(duty: Duty): Promise<void>
+
+  deleteDuty(id: string): Promise<void>
 }
 
 export class InMemoryDutyRepository implements DutyRepository {
@@ -43,6 +45,10 @@ export class InMemoryDutyRepository implements DutyRepository {
       throw new EntityNotFoundError('Duty not found')
     }
     this.duties[index] = duty
+  }
+
+  async deleteDuty(id: string) {
+    this.duties = this.duties.filter((d) => d.id !== id)
   }
 }
 
@@ -95,6 +101,11 @@ export class PostgresDutyRepository implements DutyRepository {
 
   async deleteAllDuties() {
     await this.sql`DELETE FROM duties`
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async deleteDuty(id: string) {
+    // TODO: Implement this
   }
 
   private mapRowToDuty(row: postgres.Row): Duty {
