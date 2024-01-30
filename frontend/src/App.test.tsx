@@ -136,6 +136,27 @@ describe('App', () => {
     expect(await screen.findByText('Update duty failed')).toBeVisible()
   })
 
+  it('should prevent editing existing duty to empty', async () => {
+    await dutyRemoteService.createDuty('Initial Duty')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    const editButton = await screen.findByTestId('edit-button-0')
+    fireEvent.click(editButton)
+
+    const input = screen.getByDisplayValue('Initial Duty')
+    fireEvent.change(input, { target: { value: '' } })
+
+    const saveButton = screen.getByTestId('save-button-0')
+    fireEvent.click(saveButton)
+
+    expect(await screen.findByText('Cannot edit duty to empty.')).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(1)
+    expect(savedDuties[0].name).toEqual('Initial Duty')
+  })
+
   it('should able to complete duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 

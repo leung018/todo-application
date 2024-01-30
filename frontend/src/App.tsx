@@ -41,7 +41,12 @@ const App = ({
       })
   }
 
-  const handleUpdateDuty = (duty: Duty) => {
+  const handleUpdateDuty = async (duty: Duty) => {
+    if (!duty.name) {
+      messageApi.info('Cannot edit duty to empty.')
+      return
+    }
+
     return dutyRemoteService
       .updateDuty(duty)
       .then(() => {
