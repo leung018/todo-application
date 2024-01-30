@@ -46,6 +46,10 @@ const App = ({
       messageApi.info('Cannot edit duty to empty.')
       return
     }
+    if (duty.name.length > 100) {
+      messageApi.info('Duty name should not exceed 100 characters.')
+      return
+    }
 
     return dutyRemoteService
       .updateDuty(duty)

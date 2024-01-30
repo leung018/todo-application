@@ -157,6 +157,31 @@ describe('App', () => {
     expect(savedDuties[0].name).toEqual('Initial Duty')
   })
 
+  it('should prevent editing existing duty to very long name', async () => {
+    await dutyRemoteService.createDuty('Initial Duty')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    const editButton = await screen.findByTestId('edit-button-0')
+    fireEvent.click(editButton)
+
+    const input = screen.getByDisplayValue('Initial Duty')
+    fireEvent.change(input, {
+      target: { value: 'a'.repeat(101) },
+    })
+
+    const saveButton = screen.getByTestId('save-button-0')
+    fireEvent.click(saveButton)
+
+    expect(
+      await screen.findByText('Duty name should not exceed 100 characters.'),
+    ).toBeVisible()
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(1)
+    expect(savedDuties[0].name).toEqual('Initial Duty')
+  })
+
   it('should able to complete duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 
