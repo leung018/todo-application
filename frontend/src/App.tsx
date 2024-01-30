@@ -50,6 +50,17 @@ const App = ({
       })
   }
 
+  const handleCompleteDuty = (dutyId: string) => {
+    return dutyRemoteService
+      .completeDuty(dutyId)
+      .then(() => {
+        return dutyRemoteService.listDuties()
+      })
+      .then((duties) => {
+        setDuties(duties)
+      })
+  }
+
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       {contextHolder}
@@ -72,7 +83,11 @@ const App = ({
           Add
         </Button>
       </div>
-      <DutiesList duties={duties} onUpdateDuty={handleUpdateDuty} />
+      <DutiesList
+        duties={duties}
+        onUpdateDuty={handleUpdateDuty}
+        onCompleteDuty={handleCompleteDuty}
+      />
     </div>
   )
 }
@@ -80,9 +95,11 @@ const App = ({
 const DutiesList = ({
   duties,
   onUpdateDuty,
+  onCompleteDuty,
 }: {
   duties: Duty[]
   onUpdateDuty: (duty: Duty) => Promise<unknown>
+  onCompleteDuty: (dutyId: string) => Promise<unknown>
 }) => {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingValue, setEditingValue] = useState('')
@@ -118,9 +135,12 @@ const DutiesList = ({
               />
             ),
             <Button
+              data-testid={`complete-button-${index}`}
               shape="circle"
               icon={<CheckOutlined />}
-              onClick={() => {}}
+              onClick={() => {
+                onCompleteDuty(item.id)
+              }}
             />,
           ]}
         >

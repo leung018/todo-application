@@ -114,6 +114,21 @@ describe('App', () => {
     expect(await screen.findByText('Update duty failed')).toBeVisible()
   })
 
+  it('should able to complete duty', async () => {
+    const dutyRemoteService = new InMemoryDutyService()
+    await dutyRemoteService.createDuty('Initial Duty')
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    const completeButton = await screen.findByTestId('complete-button-0')
+    fireEvent.click(completeButton)
+
+    await waitFor(() => expect(screen.queryByText('Initial Duty')).toBeNull())
+
+    const savedDuties = await dutyRemoteService.listDuties()
+    expect(savedDuties).toHaveLength(0)
+  })
+
   function addDutyViaUI(
     screen: Screen,
     { name = 'Duty 1' }: { name?: string } = {},
