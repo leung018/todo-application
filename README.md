@@ -8,11 +8,11 @@ A simple todo toy application for todo duties management that can add/edit/compl
 
 `Docker` and `Docker Compose` are required. Recommend the newest version of Docker and Docker Compose.
 
-The minimum version that can run this project has not been tested exactly. However, at least the version that support `include` syntax in `docker-compose.yml` is required (See https://docs.docker.com/compose/multiple-compose-files/include/).
+The exact minimum versions that can run this project has not been tested. However, they must be at least the versions that support `include` syntax in `docker-compose.yml` is required. See [Docker Docs on include](https://docs.docker.com/compose/multiple-compose-files/include/).
 
 ### Steps
 
-1. Build the docker images needed and run the containers as below command.
+1. Build the docker images needed and run the containers with the below command.
 
 ```bash
 make build-and-run
@@ -24,15 +24,15 @@ make build-and-run
 
 ### Continuous Integration
 
-This project has setup github workflows for CI. Formatting / linting / unit tests of both frontend and backend, integration tests of backend, and end to end tests for whole application.
+This project has setup github workflows for CI. Formatting / linting / unit tests for both frontend and backend, integration tests for backend, and end to end tests for the entire application.
 
 See `.github/workflows` directory for more details.
 
-### Non Large Pull Request and Focused Commits
+### Small Pull Request and Focused Commits
 
-This project has a convention that each pull request should not be too large and each commit should be focused on the thing as described in the commit message.
+This project has a convention that each pull request should be manageable in size and each commit should be focused on the change as described in the commit message.
 
-No direct push to main branch and all changes should be made via pull request.
+No direct pushes to main branch and all changes should be made via pull request.
 
 ## Local Development
 
@@ -42,7 +42,7 @@ No direct push to main branch and all changes should be made via pull request.
 
 ### Setup
 
-Install the node dependencies needed by below command.
+Install the node dependencies needed with the below command.
 
 ```bash
 make local-install
@@ -50,13 +50,13 @@ make local-install
 
 ### Architecture
 
-- `backend/` directory is for backend codes. See [README of backend](./backend/README.md) for more details.
-- `frontend/` directory is for frontend codes. See [README of frontend](./frontend/README.md) for more details.
-- `e2e/` directory is for end to end test codes using `cypress`. See [below section](#useful-commands) for shortcuts to run cypress in this project. Also can refer to the official document of `cypress` for more detail.
+- `backend/` directory is for backend code. See [README of backend](./backend/README.md) for more details.
+- `frontend/` directory is for frontend code. See [README of frontend](./frontend/README.md) for more details.
+- `e2e/` directory contains end-to-end test code using `Cypress`. See [below section](#useful-commands) for shortcuts to run `cypress` in this project. Also can refer to the official document of `cypress` for further details.
 
 ### Useful Commands
 
-Noted that term of development mode below means that the application will be reloaded automatically when the codes are changed.
+Noted that term of `development mode` below means that the application will be reloaded automatically when the code is changed.
 
 #### `make backend-dev`
 
@@ -64,6 +64,6 @@ Run the backend server in development mode.
 
 #### `make e2e-dev`
 
-Run both frontend and cypress in development mode. Have to run `make backend-dev` in another terminal.
+Run both frontend and `cypress` in development mode. Also have to run `make backend-dev` in another terminal.
 
 See [README of backend](./backend/README.md) and [README of frontend](./frontend/README.md) for more specific commands of both frontend and backend during development.
