@@ -55,7 +55,7 @@ make local-install
 - `frontend/` directory is for frontend code.\
   See [README of frontend](./frontend/README.md) for more details.
 - `e2e/` directory contains end-to-end test code using `Cypress`.\
-  See [below command](#make-e2e-dev) for shortcut to run `cypress` in this project. Also can refer to the official document of `cypress` for further details.
+  See [make e2e-dev](#make-e2e-dev) for shortcut to run `cypress` in this project. Also can refer to the official document of `cypress` for further details.
 
 ### Useful Commands
 
