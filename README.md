@@ -20,11 +20,19 @@ make build-and-run
 
 2. Open the browser and go to http://localhost. Done!
 
-## Continuous Integration
+## Engineering Practices
+
+### Continuous Integration
 
 This project has setup github workflows for CI. Formatting / linting / unit tests of both frontend and backend, integration tests of backend, and end to end tests for whole application.
 
 See `.github/workflows` directory for more details.
+
+### Non Large Pull Request and Focused Commits
+
+This project has a convention that each pull request should not be too large and each commit should be focused on the thing as described in the commit message.
+
+No direct push to main branch and all changes should be made via pull request.
 
 ## Local Development
 
