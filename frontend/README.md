@@ -9,12 +9,12 @@ TypeScript, React, Ant Design
 ## Features
 
 - Add / edit / complete(delete) duties.
-- Validation for duties input.
-- Error handling if calling api for add/edit/complete failed.
+- Input validation for duty entries.
+- Error handling for failed API calls when adding, editing, or completing duties.
 
 ## Local Development
 
-See [README of root](../README.md#local-development) for how to setup.
+See [this section in root README](../README.md#setup) for how to setup.
 
 ### Useful Commands
 
