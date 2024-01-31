@@ -69,4 +69,5 @@ Run the backend server in development mode.
 
 Run both frontend and `cypress` in development mode. Also have to run `make backend-dev` in another terminal.
 
-See [README of backend](./backend/README.md) and [README of frontend](./frontend/README.md) for more specific commands of both frontend and backend during development.
+See [makefile](./makefile) for more details.\
+[README of backend](./backend/README.md) and [README of frontend](./frontend/README.md) for more specific commands of both frontend and backend during development.
