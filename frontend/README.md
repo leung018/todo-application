@@ -24,7 +24,7 @@ Complete(delete) existing duty by clicking the tick icon button.
 
 ## Local Development
 
-See [this section in root README](../README.md#setup) for how to setup.
+See [Setup in root README](../README.md#setup) for how to setup.
 
 ### Useful Commands
 

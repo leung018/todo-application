@@ -18,7 +18,7 @@ TypeScript, Node.js, Express.js, PostgreSQL
 
 ## Testing strategy
 
-Have unit tests that don't involve external dependencies and integration tests that involve PostgreSQL. See [below section](#useful-commands) for how to run them.
+Have unit tests that don't involve external dependencies and integration tests that involve PostgreSQL. See [Useful Commands](#useful-commands) for how to run them.
 
 ### Explanation for `createNull` convention
 
@@ -28,7 +28,7 @@ In this project, some classes have creation methods like `Xyz.create` and `Xyz.c
 
 ## Local Development
 
-See [this section in root README](../README.md#setup) for how to setup.
+See [Setup in root README](../README.md#setup) for how to setup.
 
 ### Useful Commands
 
