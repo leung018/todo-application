@@ -1,4 +1,4 @@
-# todo-toy-project
+# Todo-toy-project
 
 A simple todo toy application for todo duties management that can add/edit/complete the duties.
 
