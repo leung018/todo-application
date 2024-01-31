@@ -12,6 +12,16 @@ TypeScript, React, Ant Design
 - Input validation for duty entries.
 - Error handling for failed API calls when adding, editing, or completing duties.
 
+### Screenshot Description
+
+![screenshot](./screenshot.png?raw=true 'screenshot')
+
+Add new duty by clicking the Add button.
+
+Edit existing duty by clicking the edit icon button. During editing, the edit icon will change to save icon that can be clicked to save the edit.
+
+Complete(delete) existing duty by clicking the tick icon button.
+
 ## Local Development
 
 See [this section in root README](../README.md#setup) for how to setup.
