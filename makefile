@@ -1,6 +1,6 @@
 build-and-run: # Build and run the application
 	docker compose up --build frontend backend -d
-e2e-tests: # Run end-to-end tests of the built docker images
+e2e-tests: # Build the docker images in environment tailored for e2e tests and then run the tests.
 	./e2e_tests.sh
 local-install: # Install dependencies for local development
 	cd frontend && yarn install
