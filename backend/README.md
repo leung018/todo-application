@@ -48,4 +48,4 @@ Fully reset and clean the local PostgreSQL Docker image. Noted that some setting
 
 Run unit tests in watch mode. Noted that this excludes integration tests.
 
-See package.json for more details and different commands.
+See [package.json](./package.json) for more details and different commands.
