@@ -108,28 +108,14 @@ describe('App', () => {
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
-    const editButton = await screen.findByTestId('edit-button-0')
-    fireEvent.click(editButton)
+    await editDutyViaUI(screen, {
+      itemIndex: 0,
+      originalName: 'Initial Duty',
+      newName: 'Updated Duty',
+    })
 
-    // Edit button should be hidden in edit mode
-    await waitFor(() =>
-      expect(screen.queryByTestId('edit-button-0')).toBeNull(),
-    )
-
-    // Input the new duty name
-    const input = screen.getByDisplayValue('Initial Duty')
-    fireEvent.change(input, { target: { value: 'Updated Duty' } })
-
-    // Click save button
-    const saveButton = screen.getByTestId('save-button-0')
-    fireEvent.click(saveButton)
-
-    // Assert UI effects after save
-    await screen.findByTestId('edit-button-0')
-    expect(screen.queryByTestId('save-button-0')).toBeNull()
     expect(screen.getByText('Updated Duty')).toBeVisible()
 
-    // Assert the duty is updated in remote service
     const savedDuties = await dutyRemoteService.listDuties()
     expect(savedDuties).toHaveLength(1)
     expect(savedDuties[0].name).toEqual('Updated Duty')
@@ -141,13 +127,12 @@ describe('App', () => {
     }
 
     render(<App dutyRemoteService={dutyRemoteService} />)
-    addDutyViaUI(screen)
+    addDutyViaUI(screen, { name: 'Duty' })
 
-    const editButton = await screen.findByTestId('edit-button-0')
-    fireEvent.click(editButton)
-
-    const saveButton = screen.getByTestId('save-button-0')
-    fireEvent.click(saveButton)
+    await editDutyViaUI(screen, {
+      itemIndex: 0,
+      originalName: 'Duty',
+    })
 
     expect(await screen.findByText('Update duty failed')).toBeVisible()
   })
@@ -157,14 +142,11 @@ describe('App', () => {
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
-    const editButton = await screen.findByTestId('edit-button-0')
-    fireEvent.click(editButton)
-
-    const input = screen.getByDisplayValue('Initial Duty')
-    fireEvent.change(input, { target: { value: '    ' } })
-
-    const saveButton = screen.getByTestId('save-button-0')
-    fireEvent.click(saveButton)
+    await editDutyViaUI(screen, {
+      itemIndex: 0,
+      originalName: 'Initial Duty',
+      newName: '    ',
+    })
 
     expect(await screen.findByText('Cannot edit duty to empty.')).toBeVisible()
 
@@ -178,16 +160,11 @@ describe('App', () => {
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
-    const editButton = await screen.findByTestId('edit-button-0')
-    fireEvent.click(editButton)
-
-    const input = screen.getByDisplayValue('Initial Duty')
-    fireEvent.change(input, {
-      target: { value: 'a'.repeat(DUTY_MAX_NAME_LENGTH + 1) },
+    await editDutyViaUI(screen, {
+      itemIndex: 0,
+      originalName: 'Initial Duty',
+      newName: 'a'.repeat(DUTY_MAX_NAME_LENGTH + 1),
     })
-
-    const saveButton = screen.getByTestId('save-button-0')
-    fireEvent.click(saveButton)
 
     expect(
       await screen.findByText(
@@ -237,5 +214,34 @@ describe('App', () => {
 
     const addButton = screen.getByText('Add')
     fireEvent.click(addButton)
+  }
+
+  async function editDutyViaUI(
+    screen: Screen,
+    {
+      itemIndex,
+      originalName,
+      newName = 'Updated Duty',
+    }: { itemIndex: number; originalName: string; newName?: string },
+  ) {
+    const editButton = await screen.findByTestId(`edit-button-${itemIndex}`)
+    fireEvent.click(editButton)
+
+    // Edit button should be hidden in edit mode
+    await waitFor(() =>
+      expect(screen.queryByTestId(`edit-button-${itemIndex}`)).toBeNull(),
+    )
+
+    // Input the new duty name
+    const input = screen.getByDisplayValue(originalName)
+    fireEvent.change(input, { target: { value: newName } })
+
+    // Click save button
+    const saveButton = screen.getByTestId(`save-button-${itemIndex}`)
+    fireEvent.click(saveButton)
+
+    // Save button should be hidden after save while edit button should be visible
+    await screen.findByTestId(`edit-button-${itemIndex}`)
+    expect(screen.queryByTestId(`save-button-${itemIndex}`)).toBeNull()
   }
 })
