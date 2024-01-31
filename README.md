@@ -1,17 +1,18 @@
 # todo-toy-project
 
-A simple todo toy application that can add/edit/complete the duties. Also can see the saved duties from the website.
+A simple todo toy application for todo duties management that can add/edit/complete the duties.
 
 ## How to run
 
 ### Prerequisites
 
-Docker and Docker Compose are required. Recommend the newest version of Docker and Docker Compose.
+`Docker` and `Docker Compose` are required. Recommend the newest version of Docker and Docker Compose.
+
 The minimum version that can run this project has not been tested exactly. However, at least the version that support `include` syntax in `docker-compose.yml` is required (See https://docs.docker.com/compose/multiple-compose-files/include/).
 
 ### Steps
 
-1. Build the docker images needed and run the containers as below command
+1. Build the docker images needed and run the containers as below command.
 
 ```bash
 make build-and-run
@@ -21,7 +22,9 @@ make build-and-run
 
 ## Continuous Integration
 
-This project has setup github workflows for CI. Formatting / linting / unit tests of both frontend and backend, integration tests of backend, and end to end tests for whole application. See `.github/workflows` directory for more details.
+This project has setup github workflows for CI. Formatting / linting / unit tests of both frontend and backend, integration tests of backend, and end to end tests for whole application.
+
+See `.github/workflows` directory for more details.
 
 ## Local Development
 
@@ -31,7 +34,7 @@ This project has setup github workflows for CI. Formatting / linting / unit test
 
 ### Setup
 
-Install the node dependencies needed by below command
+Install the node dependencies needed by below command.
 
 ```bash
 make local-install
