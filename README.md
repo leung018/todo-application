@@ -39,6 +39,7 @@ No direct pushes to main branch and all changes should be made via pull request.
 ### Prerequisites
 
 - Node v20
+- Docker and Docker Compose, for spawning a local PostgreSQL database for backend
 
 ### Setup
 
