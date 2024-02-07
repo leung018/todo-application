@@ -1,10 +1,4 @@
-import express, {
-  Express,
-  NextFunction,
-  Request,
-  Response,
-  Router,
-} from 'express'
+import express, { Express, NextFunction, Request, Response } from 'express'
 import { DutiesRouteService } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
@@ -51,17 +45,7 @@ export class ExpressAppInitializer {
   }
 
   addRouteService(path: string, routeService: RouteService) {
-    this.app.use(path, this.routerHandler(routeService.router))
-  }
-
-  private routerHandler(router: Router) {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        await router(req, res, next)
-      } catch (error) {
-        next(error)
-      }
-    }
+    this.app.use(path, routeService.router)
   }
 }
 
