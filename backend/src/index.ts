@@ -4,9 +4,9 @@ import { newApplicationContextFromEnv } from './context'
 
 const port = env.PORT || 8080
 
-ExpressAppInitializer.create(newApplicationContextFromEnv())
-  .then((initializer) => {
-    initializer.app.listen(port, () => {
+ExpressAppInitializer.createApp(newApplicationContextFromEnv())
+  .then((app) => {
+    app.listen(port, () => {
       console.log(`Server running on port ${port}`)
     })
   })

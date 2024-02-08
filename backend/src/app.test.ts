@@ -29,7 +29,7 @@ describe('API', () => {
   let app: Express
 
   beforeEach(() => {
-    app = ExpressAppInitializer.createNull().app
+    app = ExpressAppInitializer.createNullApp()
   })
 
   it('should return back duty tend to create', async () => {
@@ -192,11 +192,9 @@ describe('Async error handling', () => {
     let app: Express
 
     beforeAll(() => {
-      const expressAppInitializer = ExpressAppInitializer.createNull()
       const asyncHandlerThrowError = async () => {
         throw new Error('Unexpected error')
       }
-
       const errorRouteService = new (class extends RouteService {
         constructor() {
           super()
@@ -207,8 +205,12 @@ describe('Async error handling', () => {
           this.patch('/', asyncHandlerThrowError)
         }
       })()
-      expressAppInitializer.addRouteService('/error', errorRouteService)
-      app = expressAppInitializer.app
+
+      app = ExpressAppInitializer.createNullApp({
+        extraRouteConfigs: [
+          { path: '/error', routeService: errorRouteService },
+        ],
+      })
     })
 
     it('get', async () => {
@@ -245,17 +247,21 @@ describe('RouteErrorHandler', () => {
   function addRootGetRoute(
     handler: (req: ExpressRequest, res: ExpressResponse) => Promise<void>,
   ) {
-    const expressAppInitializer = ExpressAppInitializer.createNull()
-    expressAppInitializer.addRouteService(
-      '/',
-      new (class extends RouteService {
-        constructor() {
-          super()
-          this.get('/', handler)
-        }
-      })(),
-    )
-    return expressAppInitializer.app
+    const routeService = new (class extends RouteService {
+      constructor() {
+        super()
+        this.get('/', handler)
+      }
+    })()
+
+    return ExpressAppInitializer.createNullApp({
+      extraRouteConfigs: [
+        {
+          path: '/',
+          routeService,
+        },
+      ],
+    })
   }
 
   it('should return 500 for unexpected error', async () => {

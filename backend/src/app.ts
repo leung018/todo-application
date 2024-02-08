@@ -4,22 +4,40 @@ import morgan from 'morgan'
 import { ApplicationContext } from './context'
 import { RouteService } from './route/route'
 
-export class ExpressAppInitializer {
-  readonly app: Express
-  private readonly dutiesRouteService: DutiesRouteService
+export interface RouteConfig {
+  path: string
+  routeService: RouteService
+}
 
-  static async create(applicationContext: ApplicationContext) {
+export class ExpressAppInitializer {
+  private readonly app: Express
+
+  static async createApp(applicationContext: ApplicationContext) {
     const dutiesRouteService =
       await DutiesRouteService.create(applicationContext)
-    return new ExpressAppInitializer({
+    const initializer = new ExpressAppInitializer({
       dutiesRouteService,
     })
+    return initializer.app
   }
 
-  static createNull() {
-    return new ExpressAppInitializer({
+  /**
+   * This method is used for testing purposes only.
+   *
+   * @param extraRouteConfigs - Additional routes to add to the express app. This is useful for testing purposes.
+   */
+  static createNullApp({
+    extraRouteConfigs = [],
+  }: {
+    extraRouteConfigs?: RouteConfig[]
+  } = {}) {
+    const initializer = new ExpressAppInitializer({
       dutiesRouteService: DutiesRouteService.createNull(),
     })
+    extraRouteConfigs.forEach((routeConfig) => {
+      initializer.addRoute(routeConfig)
+    })
+    return initializer.app
   }
 
   private constructor({
@@ -28,10 +46,13 @@ export class ExpressAppInitializer {
     dutiesRouteService: DutiesRouteService
   }) {
     this.app = express()
-    this.dutiesRouteService = dutiesRouteService
 
     this.setPreRoutingMiddlewares()
-    this.setRoutes()
+
+    this.addRoute({
+      path: '/duties',
+      routeService: dutiesRouteService,
+    })
   }
 
   private setPreRoutingMiddlewares() {
@@ -40,11 +61,7 @@ export class ExpressAppInitializer {
     this.app.use(express.json())
   }
 
-  private setRoutes() {
-    this.addRouteService('/duties', this.dutiesRouteService)
-  }
-
-  addRouteService(path: string, routeService: RouteService) {
+  private addRoute({ path, routeService }: RouteConfig) {
     this.app.use(path, routeService.router)
   }
 }
