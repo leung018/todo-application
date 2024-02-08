@@ -4,6 +4,11 @@ import morgan from 'morgan'
 import { ApplicationContext } from './context'
 import { RouteService } from './route/route'
 
+export interface RouteConfig {
+  path: string
+  routeService: RouteService
+}
+
 export class ExpressAppInitializer {
   private readonly app: Express
 
@@ -17,31 +22,35 @@ export class ExpressAppInitializer {
   }
 
   static createNullApp({
-    extraRoutes = [],
+    extraRouteConfigs = [],
   }: {
-    extraRoutes?: { path: string; routeService: RouteService }[]
+    extraRouteConfigs?: RouteConfig[]
   } = {}) {
     const initializer = new ExpressAppInitializer({
       dutiesRouteService: DutiesRouteService.createNull(),
-      extraRoutes,
+      extraRouteConfigs,
     })
     return initializer.app
   }
 
   private constructor({
     dutiesRouteService,
-    extraRoutes = [],
+    extraRouteConfigs = [],
   }: {
     dutiesRouteService: DutiesRouteService
-    extraRoutes?: { path: string; routeService: RouteService }[]
+    extraRouteConfigs?: RouteConfig[]
   }) {
     this.app = express()
 
     this.setPreRoutingMiddlewares()
-    this.addRouteService('/duties', dutiesRouteService)
 
-    extraRoutes.forEach(({ path, routeService }) => {
-      this.addRouteService(path, routeService)
+    this.addRoute({
+      path: '/duties',
+      routeService: dutiesRouteService,
+    })
+
+    extraRouteConfigs.forEach((routeConfig) => {
+      this.addRoute(routeConfig)
     })
   }
 
@@ -51,7 +60,7 @@ export class ExpressAppInitializer {
     this.app.use(express.json())
   }
 
-  private addRouteService(path: string, routeService: RouteService) {
+  private addRoute({ path, routeService }: RouteConfig) {
     this.app.use(path, routeService.router)
   }
 }

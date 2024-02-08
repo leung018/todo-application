@@ -207,7 +207,9 @@ describe('Async error handling', () => {
       })()
 
       app = ExpressAppInitializer.createNullApp({
-        extraRoutes: [{ path: '/error', routeService: errorRouteService }],
+        extraRouteConfigs: [
+          { path: '/error', routeService: errorRouteService },
+        ],
       })
     })
 
@@ -253,7 +255,7 @@ describe('RouteErrorHandler', () => {
     })()
 
     return ExpressAppInitializer.createNullApp({
-      extraRoutes: [
+      extraRouteConfigs: [
         {
           path: '/',
           routeService,
