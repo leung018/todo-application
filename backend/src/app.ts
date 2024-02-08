@@ -28,17 +28,17 @@ export class ExpressAppInitializer {
   } = {}) {
     const initializer = new ExpressAppInitializer({
       dutiesRouteService: DutiesRouteService.createNull(),
-      extraRouteConfigs,
+    })
+    extraRouteConfigs.forEach((routeConfig) => {
+      initializer.addRoute(routeConfig)
     })
     return initializer.app
   }
 
   private constructor({
     dutiesRouteService,
-    extraRouteConfigs = [],
   }: {
     dutiesRouteService: DutiesRouteService
-    extraRouteConfigs?: RouteConfig[]
   }) {
     this.app = express()
 
@@ -47,10 +47,6 @@ export class ExpressAppInitializer {
     this.addRoute({
       path: '/duties',
       routeService: dutiesRouteService,
-    })
-
-    extraRouteConfigs.forEach((routeConfig) => {
-      this.addRoute(routeConfig)
     })
   }
 
