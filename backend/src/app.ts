@@ -5,33 +5,44 @@ import { ApplicationContext } from './context'
 import { RouteService } from './route/route'
 
 export class ExpressAppInitializer {
-  readonly app: Express
-  private readonly dutiesRouteService: DutiesRouteService
+  private readonly app: Express
 
-  static async create(applicationContext: ApplicationContext) {
+  static async createApp(applicationContext: ApplicationContext) {
     const dutiesRouteService =
       await DutiesRouteService.create(applicationContext)
-    return new ExpressAppInitializer({
+    const initializer = new ExpressAppInitializer({
       dutiesRouteService,
     })
+    return initializer.app
   }
 
-  static createNull() {
-    return new ExpressAppInitializer({
+  static createNullApp({
+    extraRoutes = [],
+  }: {
+    extraRoutes?: { path: string; routeService: RouteService }[]
+  } = {}) {
+    const initializer = new ExpressAppInitializer({
       dutiesRouteService: DutiesRouteService.createNull(),
+      extraRoutes,
     })
+    return initializer.app
   }
 
   private constructor({
     dutiesRouteService,
+    extraRoutes = [],
   }: {
     dutiesRouteService: DutiesRouteService
+    extraRoutes?: { path: string; routeService: RouteService }[]
   }) {
     this.app = express()
-    this.dutiesRouteService = dutiesRouteService
 
     this.setPreRoutingMiddlewares()
-    this.setRoutes()
+    this.addRouteService('/duties', dutiesRouteService)
+
+    extraRoutes.forEach(({ path, routeService }) => {
+      this.addRouteService(path, routeService)
+    })
   }
 
   private setPreRoutingMiddlewares() {
@@ -40,11 +51,7 @@ export class ExpressAppInitializer {
     this.app.use(express.json())
   }
 
-  private setRoutes() {
-    this.addRouteService('/duties', this.dutiesRouteService)
-  }
-
-  addRouteService(path: string, routeService: RouteService) {
+  private addRouteService(path: string, routeService: RouteService) {
     this.app.use(path, routeService.router)
   }
 }
