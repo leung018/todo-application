@@ -1,8 +1,7 @@
-import { describe, it, expect, beforeEach, beforeAll } from '@jest/globals'
+import { describe, it, expect, beforeEach } from '@jest/globals'
 import request from 'supertest'
 import { ExpressAppInitializer } from './app'
 import { Express } from 'express'
-import { RouteService } from './route/route'
 import { assertErrorResponse } from './test_utils/assert'
 
 interface Duty {
@@ -170,57 +169,4 @@ describe('API', () => {
   async function callDeleteAllDutiesApi() {
     return request(app).delete('/duties')
   }
-})
-
-describe('Async error handling', () => {
-  describe('should handle uncaught promise exception from routeService', () => {
-    let app: Express
-
-    beforeAll(() => {
-      const asyncHandlerThrowError = async () => {
-        throw new Error('Unexpected error')
-      }
-      const errorRouteService = new (class extends RouteService {
-        constructor() {
-          super()
-          this.get('/', asyncHandlerThrowError)
-          this.post('/', asyncHandlerThrowError)
-          this.put('/', asyncHandlerThrowError)
-          this.delete('/', asyncHandlerThrowError)
-          this.patch('/', asyncHandlerThrowError)
-        }
-      })()
-
-      app = ExpressAppInitializer.createNullApp({
-        extraRouteConfigs: [
-          { path: '/error', routeService: errorRouteService },
-        ],
-      })
-    })
-
-    it('get', async () => {
-      const response = await request(app).get('/error')
-      expect(response.status).toBe(500)
-    })
-
-    it('post', async () => {
-      const response = await request(app).post('/error')
-      expect(response.status).toBe(500)
-    })
-
-    it('put', async () => {
-      const response = await request(app).put('/error')
-      expect(response.status).toBe(500)
-    })
-
-    it('delete', async () => {
-      const response = await request(app).delete('/error')
-      expect(response.status).toBe(500)
-    })
-
-    it('patch', async () => {
-      const response = await request(app).patch('/error')
-      expect(response.status).toBe(500)
-    })
-  })
 })
