@@ -2,12 +2,6 @@ import express, { Express, NextFunction, Request, Response } from 'express'
 import { DutiesRouteService } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
-import { RouteService } from './route/route'
-
-export interface RouteConfig {
-  path: string
-  routeService: RouteService
-}
 
 export class ExpressAppInitializer {
   private readonly app: Express
@@ -26,16 +20,9 @@ export class ExpressAppInitializer {
    *
    * @param extraRouteConfigs - Additional routes to add to the express app. This is useful for testing purposes.
    */
-  static createNullApp({
-    extraRouteConfigs = [],
-  }: {
-    extraRouteConfigs?: RouteConfig[]
-  } = {}) {
+  static createNullApp() {
     const initializer = new ExpressAppInitializer({
       dutiesRouteService: DutiesRouteService.createNull(),
-    })
-    extraRouteConfigs.forEach((routeConfig) => {
-      initializer.addRoute(routeConfig)
     })
     return initializer.app
   }
@@ -49,20 +36,13 @@ export class ExpressAppInitializer {
 
     this.setPreRoutingMiddlewares()
 
-    this.addRoute({
-      path: '/duties',
-      routeService: dutiesRouteService,
-    })
+    this.app.use('/duties', dutiesRouteService.router)
   }
 
   private setPreRoutingMiddlewares() {
     this.app.use(morgan('tiny'))
     this.app.use(allowCors)
     this.app.use(express.json())
-  }
-
-  private addRoute({ path, routeService }: RouteConfig) {
-    this.app.use(path, routeService.router)
   }
 }
 

@@ -4,12 +4,15 @@ import {
   InMemoryDutyRepository,
   PostgresDutyRepository,
 } from '../repositories/duty'
-import { RouteService } from './route'
 import { Duty } from '../models/duty'
 import { ApplicationContext } from '../context'
 import { RouteErrorHandler } from './util'
+import { createRouter } from './route'
+import { Router } from 'express'
 
-export class DutiesRouteService extends RouteService {
+export class DutiesRouteService {
+  router: Router
+
   private dutyRepository: DutyRepository
 
   static async create(applicationContext: ApplicationContext) {
@@ -26,14 +29,37 @@ export class DutiesRouteService extends RouteService {
   }
 
   private constructor({ dutyRepository }: { dutyRepository: DutyRepository }) {
-    super()
     this.dutyRepository = dutyRepository
 
-    this.post('/', this.createDuty)
-    this.get('/', this.listDuties)
-    this.delete('/', this.deleteAllDuties)
-    this.put('/:id', this.updateDuty)
-    this.delete('/:id', this.deleteDuty)
+    const router = createRouter([
+      {
+        path: '/',
+        method: 'post',
+        handler: this.createDuty,
+      },
+      {
+        path: '/',
+        method: 'get',
+        handler: this.listDuties,
+      },
+      {
+        path: '/',
+        method: 'delete',
+        handler: this.deleteAllDuties,
+      },
+      {
+        path: '/:id',
+        method: 'put',
+        handler: this.updateDuty,
+      },
+      {
+        path: '/:id',
+        method: 'delete',
+        handler: this.deleteDuty,
+      },
+    ])
+
+    this.router = router
   }
 
   private createDuty = async (req: Request, res: Response) => {
