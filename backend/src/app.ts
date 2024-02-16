@@ -1,68 +1,43 @@
-import express, { Express, NextFunction, Request, Response } from 'express'
-import { DutiesRouteService } from './route/duties'
+import express, {
+  Express,
+  NextFunction,
+  Request,
+  Response,
+  Router,
+} from 'express'
+import { DutiesRouterInitializer } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
-import { RouteService } from './route/route'
-
-export interface RouteConfig {
-  path: string
-  routeService: RouteService
-}
 
 export class ExpressAppInitializer {
   private readonly app: Express
 
   static async createApp(applicationContext: ApplicationContext) {
-    const dutiesRouteService =
-      await DutiesRouteService.create(applicationContext)
+    const dutiesRouter =
+      await DutiesRouterInitializer.createRouter(applicationContext)
     const initializer = new ExpressAppInitializer({
-      dutiesRouteService,
+      dutiesRouter: dutiesRouter,
     })
     return initializer.app
   }
 
-  /**
-   * This method is used for testing purposes only.
-   *
-   * @param extraRouteConfigs - Additional routes to add to the express app. This is useful for testing purposes.
-   */
-  static createNullApp({
-    extraRouteConfigs = [],
-  }: {
-    extraRouteConfigs?: RouteConfig[]
-  } = {}) {
+  static createNullApp() {
     const initializer = new ExpressAppInitializer({
-      dutiesRouteService: DutiesRouteService.createNull(),
-    })
-    extraRouteConfigs.forEach((routeConfig) => {
-      initializer.addRoute(routeConfig)
+      dutiesRouter: DutiesRouterInitializer.createNullRouter(),
     })
     return initializer.app
   }
 
-  private constructor({
-    dutiesRouteService,
-  }: {
-    dutiesRouteService: DutiesRouteService
-  }) {
+  private constructor({ dutiesRouter }: { dutiesRouter: Router }) {
     this.app = express()
-
     this.setPreRoutingMiddlewares()
-
-    this.addRoute({
-      path: '/duties',
-      routeService: dutiesRouteService,
-    })
+    this.app.use('/duties', dutiesRouter)
   }
 
   private setPreRoutingMiddlewares() {
     this.app.use(morgan('tiny'))
     this.app.use(allowCors)
     this.app.use(express.json())
-  }
-
-  private addRoute({ path, routeService }: RouteConfig) {
-    this.app.use(path, routeService.router)
   }
 }
 

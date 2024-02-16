@@ -1,28 +1,12 @@
-import { describe, it, expect, beforeEach, beforeAll } from '@jest/globals'
-import request, { Response } from 'supertest'
+import { describe, it, expect, beforeEach } from '@jest/globals'
+import request from 'supertest'
 import { ExpressAppInitializer } from './app'
-import {
-  Express,
-  Request as ExpressRequest,
-  Response as ExpressResponse,
-} from 'express'
-import { RouteService } from './route/route'
-import { RouteErrorHandler } from './route/util'
+import { Express } from 'express'
+import { assertErrorResponse } from './test_utils/assert'
 
 interface Duty {
   id: string
   name: string
-}
-
-function assertErrorResponse(
-  expected: {
-    status: number
-    message: string
-  },
-  actualResponse: Response,
-) {
-  expect(actualResponse.status).toBe(expected.status)
-  expect(actualResponse.body.message).toBe(expected.message)
 }
 
 describe('API', () => {
@@ -185,146 +169,4 @@ describe('API', () => {
   async function callDeleteAllDutiesApi() {
     return request(app).delete('/duties')
   }
-})
-
-describe('Async error handling', () => {
-  describe('should handle uncaught promise exception from routeService', () => {
-    let app: Express
-
-    beforeAll(() => {
-      const asyncHandlerThrowError = async () => {
-        throw new Error('Unexpected error')
-      }
-      const errorRouteService = new (class extends RouteService {
-        constructor() {
-          super()
-          this.get('/', asyncHandlerThrowError)
-          this.post('/', asyncHandlerThrowError)
-          this.put('/', asyncHandlerThrowError)
-          this.delete('/', asyncHandlerThrowError)
-          this.patch('/', asyncHandlerThrowError)
-        }
-      })()
-
-      app = ExpressAppInitializer.createNullApp({
-        extraRouteConfigs: [
-          { path: '/error', routeService: errorRouteService },
-        ],
-      })
-    })
-
-    it('get', async () => {
-      const response = await request(app).get('/error')
-      expect(response.status).toBe(500)
-    })
-
-    it('post', async () => {
-      const response = await request(app).post('/error')
-      expect(response.status).toBe(500)
-    })
-
-    it('put', async () => {
-      const response = await request(app).put('/error')
-      expect(response.status).toBe(500)
-    })
-
-    it('delete', async () => {
-      const response = await request(app).delete('/error')
-      expect(response.status).toBe(500)
-    })
-
-    it('patch', async () => {
-      const response = await request(app).patch('/error')
-      expect(response.status).toBe(500)
-    })
-  })
-})
-
-describe('RouteErrorHandler', () => {
-  class CustomError extends Error {}
-  class UnexpectedError extends Error {}
-
-  function addRootGetRoute(
-    handler: (req: ExpressRequest, res: ExpressResponse) => Promise<void>,
-  ) {
-    const routeService = new (class extends RouteService {
-      constructor() {
-        super()
-        this.get('/', handler)
-      }
-    })()
-
-    return ExpressAppInitializer.createNullApp({
-      extraRouteConfigs: [
-        {
-          path: '/',
-          routeService,
-        },
-      ],
-    })
-  }
-
-  it('should return 500 for unexpected error', async () => {
-    const app = addRootGetRoute(async (req, res) => {
-      try {
-        throw new UnexpectedError('Unexpected error')
-      } catch (err) {
-        return new RouteErrorHandler([
-          {
-            statusCode: 401,
-            typeOfError: CustomError,
-          },
-        ]).handle(err, res)
-      }
-    })
-    const response = await request(app).get('/')
-    expect(response.status).toBe(500)
-  })
-
-  it('should return templated response for expected error', async () => {
-    const app = addRootGetRoute(async (req, res) => {
-      try {
-        throw new CustomError('Default message')
-      } catch (err) {
-        return new RouteErrorHandler([
-          {
-            statusCode: 403,
-            typeOfError: CustomError,
-          },
-        ]).handle(err, res)
-      }
-    })
-    const response = await request(app).get('/')
-    assertErrorResponse(
-      {
-        status: 403,
-        message: 'Default message',
-      },
-      response,
-    )
-  })
-
-  it('should custom response contain custom message if template provided it', async () => {
-    const app = addRootGetRoute(async (req, res) => {
-      try {
-        throw new CustomError('Default message')
-      } catch (err) {
-        return new RouteErrorHandler([
-          {
-            statusCode: 402,
-            typeOfError: CustomError,
-            customMessage: 'Custom message',
-          },
-        ]).handle(err, res)
-      }
-    })
-    const response = await request(app).get('/')
-    assertErrorResponse(
-      {
-        status: 402,
-        message: 'Custom message',
-      },
-      response,
-    )
-  })
 })
