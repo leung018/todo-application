@@ -1,5 +1,11 @@
-import express, { Express, NextFunction, Request, Response } from 'express'
-import { DutiesRouteService } from './route/duties'
+import express, {
+  Express,
+  NextFunction,
+  Request,
+  Response,
+  Router,
+} from 'express'
+import { DutiesRouterInitializer } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
 
@@ -7,10 +13,10 @@ export class ExpressAppInitializer {
   private readonly app: Express
 
   static async createApp(applicationContext: ApplicationContext) {
-    const dutiesRouteService =
-      await DutiesRouteService.create(applicationContext)
+    const dutiesRouter =
+      await DutiesRouterInitializer.createRouter(applicationContext)
     const initializer = new ExpressAppInitializer({
-      dutiesRouteService,
+      dutiesRouter: dutiesRouter,
     })
     return initializer.app
   }
@@ -22,21 +28,15 @@ export class ExpressAppInitializer {
    */
   static createNullApp() {
     const initializer = new ExpressAppInitializer({
-      dutiesRouteService: DutiesRouteService.createNull(),
+      dutiesRouter: DutiesRouterInitializer.createNullRouter(),
     })
     return initializer.app
   }
 
-  private constructor({
-    dutiesRouteService,
-  }: {
-    dutiesRouteService: DutiesRouteService
-  }) {
+  private constructor({ dutiesRouter }: { dutiesRouter: Router }) {
     this.app = express()
-
     this.setPreRoutingMiddlewares()
-
-    this.app.use('/duties', dutiesRouteService.router)
+    this.app.use('/duties', dutiesRouter)
   }
 
   private setPreRoutingMiddlewares() {

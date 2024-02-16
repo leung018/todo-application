@@ -10,22 +10,22 @@ import { RouteErrorHandler } from './util'
 import { createRouter } from './route'
 import { Router } from 'express'
 
-export class DutiesRouteService {
-  router: Router
+export class DutiesRouterInitializer {
+  private router: Router
 
   private dutyRepository: DutyRepository
 
-  static async create(applicationContext: ApplicationContext) {
+  static async createRouter(applicationContext: ApplicationContext) {
     const dutyRepository = await PostgresDutyRepository.create(
       applicationContext.postgresContext,
     )
-    return new DutiesRouteService({ dutyRepository })
+    return new DutiesRouterInitializer({ dutyRepository }).router
   }
 
-  static createNull() {
-    return new DutiesRouteService({
+  static createNullRouter() {
+    return new DutiesRouterInitializer({
       dutyRepository: new InMemoryDutyRepository(),
-    })
+    }).router
   }
 
   private constructor({ dutyRepository }: { dutyRepository: DutyRepository }) {
