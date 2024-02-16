@@ -21,11 +21,6 @@ export class ExpressAppInitializer {
     return initializer.app
   }
 
-  /**
-   * This method is used for testing purposes only.
-   *
-   * @param extraRouteConfigs - Additional routes to add to the express app. This is useful for testing purposes.
-   */
   static createNullApp() {
     const initializer = new ExpressAppInitializer({
       dutiesRouter: DutiesRouterInitializer.createNullRouter(),
