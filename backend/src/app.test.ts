@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, beforeAll } from '@jest/globals'
-import request, { Response } from 'supertest'
+import request from 'supertest'
 import { ExpressAppInitializer } from './app'
 import {
   Express,
@@ -8,21 +8,11 @@ import {
 } from 'express'
 import { RouteService } from './route/route'
 import { RouteErrorHandler } from './route/util'
+import { assertErrorResponse } from './test_utils/assert'
 
 interface Duty {
   id: string
   name: string
-}
-
-function assertErrorResponse(
-  expected: {
-    status: number
-    message: string
-  },
-  actualResponse: Response,
-) {
-  expect(actualResponse.status).toBe(expected.status)
-  expect(actualResponse.body.message).toBe(expected.message)
 }
 
 describe('API', () => {
