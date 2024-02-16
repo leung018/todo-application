@@ -6,6 +6,10 @@ export interface RouteConfig {
   handler: (req: Request, res: Response) => void
 }
 
+/**
+ * Aim of this function is to create a router that wrapped handlers with async error handling support.
+ * Original express router does not support async error handling.
+ */
 export function createRouter(routeConfigs: RouteConfig[]): Router {
   const router = Router()
   routeConfigs.forEach((routeConfig) => {
