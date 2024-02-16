@@ -7,7 +7,6 @@ export interface RouteErrorTemplate {
   customMessage?: string
 }
 
-// This class is tested in a test suite of app.test.ts
 export class RouteErrorHandler {
   static defaultRouteErrorTemplates: ReadonlyArray<RouteErrorTemplate> = [
     {
