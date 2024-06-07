@@ -5,22 +5,22 @@ import express, {
   Response,
   Router,
 } from 'express'
-import { DutiesRouterInitializer } from './route/duties'
+import { DutiesRouterFactory } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
 
-export class ExpressAppInitializer {
+export class ExpressAppFactory {
   static async createApp(applicationContext: ApplicationContext) {
     const dutiesRouter =
-      await DutiesRouterInitializer.createRouter(applicationContext)
-    return ExpressAppInitializer.internalCreateApp({
+      await DutiesRouterFactory.createRouter(applicationContext)
+    return ExpressAppFactory.internalCreateApp({
       dutiesRouter,
     })
   }
 
   static createNullApp() {
-    return ExpressAppInitializer.internalCreateApp({
-      dutiesRouter: DutiesRouterInitializer.createNullRouter(),
+    return ExpressAppFactory.internalCreateApp({
+      dutiesRouter: DutiesRouterFactory.createNullRouter(),
     })
   }
 

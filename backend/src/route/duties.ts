@@ -9,16 +9,16 @@ import { ApplicationContext } from '../context'
 import { RouteErrorHandler } from './util'
 import { createRouter } from './route'
 
-export class DutiesRouterInitializer {
+export class DutiesRouterFactory {
   static async createRouter(applicationContext: ApplicationContext) {
     const dutyRepository = await PostgresDutyRepository.create(
       applicationContext.postgresContext,
     )
-    return new DutiesRouterInitializer({ dutyRepository }).createRouter()
+    return new DutiesRouterFactory({ dutyRepository }).createRouter()
   }
 
   static createNullRouter() {
-    return new DutiesRouterInitializer({
+    return new DutiesRouterFactory({
       dutyRepository: new InMemoryDutyRepository(),
     }).createRouter()
   }

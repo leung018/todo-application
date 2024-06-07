@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import request from 'supertest'
-import { ExpressAppInitializer } from './app'
+import { ExpressAppFactory } from './app'
 import { Express } from 'express'
 import { assertErrorResponse } from './test_utils/assert'
 
@@ -13,7 +13,7 @@ describe('API', () => {
   let app: Express
 
   beforeEach(() => {
-    app = ExpressAppInitializer.createNullApp()
+    app = ExpressAppFactory.createNullApp()
   })
 
   it('should return back duty tend to create', async () => {

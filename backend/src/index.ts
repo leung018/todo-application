@@ -1,10 +1,10 @@
 import { env } from 'process'
-import { ExpressAppInitializer } from './app'
+import { ExpressAppFactory } from './app'
 import { newApplicationContextFromEnv } from './context'
 
 const port = env.PORT || 8080
 
-ExpressAppInitializer.createApp(newApplicationContextFromEnv())
+ExpressAppFactory.createApp(newApplicationContextFromEnv())
   .then((app) => {
     app.listen(port, () => {
       console.log(`Server running on port ${port}`)
