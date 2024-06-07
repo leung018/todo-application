@@ -8,30 +8,29 @@ import { Duty } from '../models/duty'
 import { ApplicationContext } from '../context'
 import { RouteErrorHandler } from './util'
 import { createRouter } from './route'
-import { Router } from 'express'
 
 export class DutiesRouterInitializer {
-  private router: Router
-
-  private dutyRepository: DutyRepository
-
   static async createRouter(applicationContext: ApplicationContext) {
     const dutyRepository = await PostgresDutyRepository.create(
       applicationContext.postgresContext,
     )
-    return new DutiesRouterInitializer({ dutyRepository }).router
+    return new DutiesRouterInitializer({ dutyRepository }).createRouter()
   }
 
   static createNullRouter() {
     return new DutiesRouterInitializer({
       dutyRepository: new InMemoryDutyRepository(),
-    }).router
+    }).createRouter()
   }
+
+  private dutyRepository: DutyRepository
 
   private constructor({ dutyRepository }: { dutyRepository: DutyRepository }) {
     this.dutyRepository = dutyRepository
+  }
 
-    const router = createRouter([
+  private createRouter() {
+    return createRouter([
       {
         path: '/',
         method: 'post',
@@ -58,8 +57,6 @@ export class DutiesRouterInitializer {
         handler: this.deleteDuty,
       },
     ])
-
-    this.router = router
   }
 
   private createDuty = async (req: Request, res: Response) => {
