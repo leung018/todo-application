@@ -5,39 +5,38 @@ import express, {
   Response,
   Router,
 } from 'express'
-import { DutiesRouterInitializer } from './route/duties'
+import { DutiesRouterFactory } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
 
-export class ExpressAppInitializer {
-  private readonly app: Express
-
+export class ExpressAppFactory {
   static async createApp(applicationContext: ApplicationContext) {
     const dutiesRouter =
-      await DutiesRouterInitializer.createRouter(applicationContext)
-    const initializer = new ExpressAppInitializer({
-      dutiesRouter: dutiesRouter,
+      await DutiesRouterFactory.createRouter(applicationContext)
+    return ExpressAppFactory.internalCreateApp({
+      dutiesRouter,
     })
-    return initializer.app
   }
 
   static createNullApp() {
-    const initializer = new ExpressAppInitializer({
-      dutiesRouter: DutiesRouterInitializer.createNullRouter(),
+    return ExpressAppFactory.internalCreateApp({
+      dutiesRouter: DutiesRouterFactory.createNullRouter(),
     })
-    return initializer.app
   }
 
-  private constructor({ dutiesRouter }: { dutiesRouter: Router }) {
-    this.app = express()
-    this.setPreRoutingMiddlewares()
-    this.app.use('/duties', dutiesRouter)
+  private static internalCreateApp({ dutiesRouter }: { dutiesRouter: Router }) {
+    const app = express()
+    this.setPreRoutingMiddlewares(app)
+
+    app.use('/duties', dutiesRouter)
+
+    return app
   }
 
-  private setPreRoutingMiddlewares() {
-    this.app.use(morgan('tiny'))
-    this.app.use(allowCors)
-    this.app.use(express.json())
+  private static setPreRoutingMiddlewares(app: Express) {
+    app.use(morgan('tiny'))
+    app.use(allowCors)
+    app.use(express.json())
   }
 }
 
