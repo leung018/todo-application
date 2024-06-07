@@ -23,7 +23,7 @@ export class DutiesRouterFactory {
     }).createRouter()
   }
 
-  private dutyRepository: DutyRepository
+  private readonly dutyRepository: DutyRepository
 
   private constructor({ dutyRepository }: { dutyRepository: DutyRepository }) {
     this.dutyRepository = dutyRepository
@@ -59,7 +59,7 @@ export class DutiesRouterFactory {
     ])
   }
 
-  private createDuty = async (req: Request, res: Response) => {
+  private readonly createDuty = async (req: Request, res: Response) => {
     let duty: Duty
     try {
       duty = Duty.create({ name: req.body.name })
@@ -70,7 +70,7 @@ export class DutiesRouterFactory {
     res.status(201).send(mapDutyToJSON(duty))
   }
 
-  private updateDuty = async (req: Request, res: Response) => {
+  private readonly updateDuty = async (req: Request, res: Response) => {
     let duty: Duty
     try {
       duty = new Duty({ id: req.params.id, name: req.body.name })
@@ -81,7 +81,7 @@ export class DutiesRouterFactory {
     res.status(204).send()
   }
 
-  private deleteDuty = async (req: Request, res: Response) => {
+  private readonly deleteDuty = async (req: Request, res: Response) => {
     try {
       await this.dutyRepository.deleteDuty(req.params.id)
     } catch (err) {
@@ -90,12 +90,12 @@ export class DutiesRouterFactory {
     res.status(204).send()
   }
 
-  private listDuties = async (req: Request, res: Response) => {
+  private readonly listDuties = async (req: Request, res: Response) => {
     const duties = await this.dutyRepository.listDuties()
     res.status(200).send(duties.map(mapDutyToJSON))
   }
 
-  private deleteAllDuties = async (req: Request, res: Response) => {
+  private readonly deleteAllDuties = async (req: Request, res: Response) => {
     await this.dutyRepository.deleteAllDuties()
     res.status(204).send()
   }

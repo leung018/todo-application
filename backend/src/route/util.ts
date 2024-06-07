@@ -19,7 +19,7 @@ export class RouteErrorHandler {
     },
   ]
 
-  private routeErrorTemplates: ReadonlyArray<RouteErrorTemplate>
+  private readonly routeErrorTemplates: ReadonlyArray<RouteErrorTemplate>
 
   constructor(
     routeErrorTemplates: ReadonlyArray<RouteErrorTemplate> = RouteErrorHandler.defaultRouteErrorTemplates,
