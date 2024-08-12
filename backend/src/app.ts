@@ -43,6 +43,7 @@ export class ExpressAppFactory {
       OpenApiValidator.middleware({
         apiSpec: './openapi.yaml',
         validateRequests: true,
+        validateResponses: true,
       }),
     )
   }
