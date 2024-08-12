@@ -1,0 +1,116 @@
+openapi: 3.0.0 # TODO: Update this to 3.1.0 when express-openapi-validator supports it
+info:
+  title: Duties API
+  version: 1.0.0
+paths:
+  /duties:
+    post:
+      summary: Create a duty
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DutyModifyRequest'
+      responses:
+        '201':
+          description: Duty created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Duty'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      summary: List all duties
+      responses:
+        '200':
+          description: A list of duties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Duty'
+    delete:
+      summary: Delete all duties
+      responses:
+        '204':
+          description: All duties deleted successfully
+  /duties/{id}:
+    put:
+      summary: Update a duty
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DutyModifyRequest'
+      responses:
+        '204':
+          description: Duty updated successfully
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Duty not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a duty
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Duty deleted successfully
+        '404':
+          description: Duty not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Duty:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    DutyModifyRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string

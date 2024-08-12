@@ -8,6 +8,7 @@ import express, {
 import { DutiesRouterFactory } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
+import * as OpenApiValidator from 'express-openapi-validator'
 
 export class ExpressAppFactory {
   static async createApp(applicationContext: ApplicationContext) {
@@ -30,6 +31,7 @@ export class ExpressAppFactory {
 
     app.use('/duties', dutiesRouter)
 
+    app.use(this.errorHandler)
     return app
   }
 
@@ -37,6 +39,31 @@ export class ExpressAppFactory {
     app.use(morgan('tiny'))
     app.use(allowCors)
     app.use(express.json())
+    app.use(
+      OpenApiValidator.middleware({
+        apiSpec: './openapi.yaml',
+        validateRequests: true,
+        validateResponses: true,
+      }),
+    )
+  }
+
+  private static readonly errorHandler = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    err: any,
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    // According to express documentation, if headers already sent, we must delegate to the default Express error handler
+    if (res.headersSent) {
+      return next(err)
+    }
+
+    // Refer to the how to register an error handler in the documentation of express-openapi-validator
+    res.status(err.status || 500).json({
+      message: err.message,
+    })
   }
 }
 
