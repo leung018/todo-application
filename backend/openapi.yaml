@@ -92,6 +92,9 @@ components:
   schemas:
     Duty:
       type: object
+      required:
+        - id
+        - name
       properties:
         id:
           type: string
@@ -99,6 +102,8 @@ components:
           type: string
     Error:
       type: object
+      required:
+        - message
       properties:
         message:
           type: string
