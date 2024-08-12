@@ -5,7 +5,7 @@ import express, {
   Response,
   Router,
 } from 'express'
-import { DutiesRouterFactory } from './route/duties'
+import { DutiesRouterFactory } from './routes/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
 import * as OpenApiValidator from 'express-openapi-validator'
