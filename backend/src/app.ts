@@ -8,6 +8,7 @@ import express, {
 import { DutiesRouterFactory } from './route/duties'
 import morgan from 'morgan'
 import { ApplicationContext } from './context'
+import * as OpenApiValidator from 'express-openapi-validator'
 
 export class ExpressAppFactory {
   static async createApp(applicationContext: ApplicationContext) {
@@ -37,6 +38,12 @@ export class ExpressAppFactory {
     app.use(morgan('tiny'))
     app.use(allowCors)
     app.use(express.json())
+    app.use(
+      OpenApiValidator.middleware({
+        apiSpec: './openapi.yaml',
+        validateRequests: true,
+      }),
+    )
   }
 }
 
