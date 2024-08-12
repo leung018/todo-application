@@ -20,7 +20,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Duty'
         '400':
-          description: Invalid duty name
+          description: Invalid input
           content:
             application/json:
               schema:
@@ -60,7 +60,7 @@ paths:
         '204':
           description: Duty updated successfully
         '400':
-          description: Invalid duty name
+          description: Invalid input
           content:
             application/json:
               schema:
