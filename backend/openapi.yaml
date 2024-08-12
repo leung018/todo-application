@@ -11,13 +11,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - name
-              properties:
-                name:
-                  type: string
-                  example: My Duty
+              $ref: '#/components/schemas/DutyModifyRequest'
       responses:
         '201':
           description: Duty created successfully
@@ -61,11 +55,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  example: Updated Name
+              $ref: '#/components/schemas/DutyModifyRequest'
       responses:
         '204':
           description: Duty updated successfully
@@ -111,4 +101,11 @@ components:
       type: object
       properties:
         message:
+          type: string
+    DutyModifyRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
           type: string
