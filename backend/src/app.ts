@@ -31,6 +31,7 @@ export class ExpressAppFactory {
 
     app.use('/duties', dutiesRouter)
 
+    app.use(this.errorHandler)
     return app
   }
 
@@ -44,6 +45,24 @@ export class ExpressAppFactory {
         validateRequests: true,
       }),
     )
+  }
+
+  private static readonly errorHandler = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    err: any,
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    // According to express documentation, if headers already sent, we must delegate to the default Express error handler
+    if (res.headersSent) {
+      return next(err)
+    }
+
+    // Refer to the how to register an error handler in the documentation of express-openapi-validator
+    res.status(err.status || 500).json({
+      message: err.message,
+    })
   }
 }
 

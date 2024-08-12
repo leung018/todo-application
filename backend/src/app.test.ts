@@ -33,6 +33,17 @@ describe('API', () => {
     )
   })
 
+  it('should return bad request if input is not the format stated in openapi', async () => {
+    const response = await request(app).post('/duties').send({})
+    assertErrorResponse(
+      {
+        status: 400,
+        message: "request/body must have required property 'name'", // This is the error message from express-openapi-validator
+      },
+      response,
+    )
+  })
+
   it('should create single duty and list it', async () => {
     const createdDuty = await createDuty({ name: 'My Duty' })
 
