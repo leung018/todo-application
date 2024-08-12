@@ -11,6 +11,7 @@ RUN yarn install --immutable
 
 COPY tsconfig.json ./
 COPY src ./src
+COPY openapi.yaml ./
 
 RUN yarn build
 CMD ["yarn", "start"]
