@@ -38,7 +38,7 @@ export class ExpressAppFactory {
 
   private static setPreRoutingMiddlewares(app: Express) {
     app.use(morgan('tiny'))
-    app.use(cors())
+    app.use(cors()) // TODO: Configure cors with stricter option when needed
     app.use(express.json())
     app.use(
       OpenApiValidator.middleware({
