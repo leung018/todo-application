@@ -7,6 +7,7 @@ import express, {
 } from 'express'
 import { DutiesRouterFactory } from './routes/duties'
 import morgan from 'morgan'
+import cors from 'cors'
 import { ApplicationContext } from './context'
 import * as OpenApiValidator from 'express-openapi-validator'
 
@@ -37,7 +38,7 @@ export class ExpressAppFactory {
 
   private static setPreRoutingMiddlewares(app: Express) {
     app.use(morgan('tiny'))
-    app.use(allowCors)
+    app.use(cors()) // TODO: Configure cors with stricter option when needed
     app.use(express.json())
     app.use(
       OpenApiValidator.middleware({
@@ -65,11 +66,4 @@ export class ExpressAppFactory {
       message: err.message,
     })
   }
-}
-
-const allowCors = (req: Request, res: Response, next: NextFunction): void => {
-  res.set('Access-Control-Allow-Origin', '*')
-  res.set('Access-Control-Allow-Headers', '*')
-  res.set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, PATCH')
-  next()
 }
