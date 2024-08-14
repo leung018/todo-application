@@ -6,7 +6,7 @@ import {
   Screen,
 } from '@testing-library/react'
 import App from './App'
-import { DutyRemoteService, InMemoryDutyService } from './services/duty'
+import { DutyRemoteService, InMemoryDutyRemoteService } from './services/duty'
 import { DUTY_MAX_NAME_LENGTH } from './models/duty'
 
 describe('App', () => {
@@ -26,7 +26,7 @@ describe('App', () => {
   let dutyRemoteService: DutyRemoteService
 
   beforeEach(() => {
-    dutyRemoteService = new InMemoryDutyService()
+    dutyRemoteService = new InMemoryDutyRemoteService()
   })
 
   it('should display created duties', async () => {

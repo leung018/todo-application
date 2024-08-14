@@ -47,7 +47,7 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
   }
 }
 
-export class InMemoryDutyService implements DutyRemoteService {
+export class InMemoryDutyRemoteService implements DutyRemoteService {
   private duties: Duty[] = []
 
   async createDuty(name: string) {
