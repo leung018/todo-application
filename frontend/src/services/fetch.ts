@@ -1,7 +1,7 @@
 /* Using myFetch instead of fetch, we can return the JSON response directly, and reject all response with non-200 status code as an error.
  * This can simplify the error handling in the frontend code and let the interface of the remote service can specify the return type of promise as the expected JSON response directly.
  */
-export function myFetch(url: string, init?: RequestInit) {
+export async function myFetch(url: string, init?: RequestInit) {
   return fetch(url, init)
     .then((res) => {
       if (!res.ok) {
