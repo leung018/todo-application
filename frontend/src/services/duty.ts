@@ -3,8 +3,25 @@ import { Duty } from '../models/duty'
 export interface DutyRemoteService {
   createDuty: (name: string) => Promise<Duty>
   listDuties(): Promise<Duty[]>
-  updateDuty: (duty: Duty) => Promise<unknown>
-  completeDuty: (dutyId: string) => Promise<unknown>
+  updateDuty: (duty: Duty) => Promise<void>
+  completeDuty: (dutyId: string) => Promise<void>
+}
+
+function myFetch(url: string, init?: RequestInit) {
+  return fetch(url, init)
+    .then((res) => {
+      if (!res.ok) {
+        // TODO: Currently frontend already guards the case for bad request. If future display error message is needed, we can add more specific error handling here.
+        throw new Error('Unexpected error')
+      }
+      const contentType = res.headers.get('Content-Type')
+      if (contentType && contentType.includes('application/json')) {
+        return res.json()
+      }
+    })
+    .catch(() => {
+      throw new Error('Unable to interact with server')
+    })
 }
 
 export class DutyRemoteServiceImpl implements DutyRemoteService {
@@ -15,19 +32,17 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
   }
 
   async createDuty(name: string) {
-    return fetch(`${this.apiEndpoint}/duties`, {
+    return myFetch(`${this.apiEndpoint}/duties`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name }),
-    }).then((res) => {
-      return res.json()
     })
   }
 
   async updateDuty(duty: Duty) {
-    return fetch(`${this.apiEndpoint}/duties/${duty.id}`, {
+    return myFetch(`${this.apiEndpoint}/duties/${duty.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -37,11 +52,11 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
   }
 
   async listDuties() {
-    return fetch(`${this.apiEndpoint}/duties`).then((res) => res.json())
+    return myFetch(`${this.apiEndpoint}/duties`)
   }
 
   async completeDuty(dutyId: string) {
-    return fetch(`${this.apiEndpoint}/duties/${dutyId}`, {
+    return myFetch(`${this.apiEndpoint}/duties/${dutyId}`, {
       method: 'DELETE',
     })
   }
