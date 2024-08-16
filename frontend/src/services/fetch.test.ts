@@ -22,7 +22,7 @@ describe('myFetch', () => {
     await expect(myFetch(url)).rejects.toThrow('Unable to interact with server')
   })
 
-  it('should throw error if response status code is not 200', async () => {
+  it('should throw error if response status is not ok', async () => {
     server.setNextResponse({
       status: 500,
       headers: {
