@@ -1,10 +1,11 @@
 import { Duty } from '../models/duty'
+import { myFetch } from './fetch'
 
 export interface DutyRemoteService {
   createDuty: (name: string) => Promise<Duty>
   listDuties(): Promise<Duty[]>
-  updateDuty: (duty: Duty) => Promise<unknown>
-  completeDuty: (dutyId: string) => Promise<unknown>
+  updateDuty: (duty: Duty) => Promise<void>
+  completeDuty: (dutyId: string) => Promise<void>
 }
 
 export class DutyRemoteServiceImpl implements DutyRemoteService {
@@ -15,19 +16,17 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
   }
 
   async createDuty(name: string) {
-    return fetch(`${this.apiEndpoint}/duties`, {
+    return myFetch(`${this.apiEndpoint}/duties`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name }),
-    }).then((res) => {
-      return res.json()
     })
   }
 
   async updateDuty(duty: Duty) {
-    return fetch(`${this.apiEndpoint}/duties/${duty.id}`, {
+    return myFetch(`${this.apiEndpoint}/duties/${duty.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -37,11 +36,11 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
   }
 
   async listDuties() {
-    return fetch(`${this.apiEndpoint}/duties`).then((res) => res.json())
+    return myFetch(`${this.apiEndpoint}/duties`)
   }
 
   async completeDuty(dutyId: string) {
-    return fetch(`${this.apiEndpoint}/duties/${dutyId}`, {
+    return myFetch(`${this.apiEndpoint}/duties/${dutyId}`, {
       method: 'DELETE',
     })
   }
