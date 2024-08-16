@@ -5,7 +5,9 @@ export async function myFetch(url: string, init?: RequestInit) {
   return fetch(url, init)
     .then((res) => {
       if (!res.ok) {
-        // TODO: Currently frontend already guards the case for bad request. If future display error message is needed, we can add more specific error handling here.
+        // TODO: Currently, frontend already guards the cases that will trigger client error response(http status 4xx). So all not ok response is unexpected error.
+        // If displaying error message according to backend response is needed, we can change the error handling here.
+        // e.g. Pass the response body message to the argument of RequestFailedError if it is client error.
         throw new RequestFailedError('Unexpected error')
       }
       const contentType = res.headers.get('Content-Type')
