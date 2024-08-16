@@ -32,6 +32,18 @@ describe('myFetch', () => {
     })
     await expect(myFetch(URL)).rejects.toThrow('Unexpected error')
   })
+
+  it('should return JSON response directly if response status code is ok and the response is json', async () => {
+    server.setNextResponse({
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: 'Hello, world!' }),
+    })
+    await expect(myFetch(URL)).resolves.toEqual({ message: 'Hello, world!' })
+  })
 })
 
 interface MyResponse {
