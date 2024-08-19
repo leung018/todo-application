@@ -29,7 +29,7 @@ describe('App', () => {
     dutyRemoteService = new InMemoryDutyRemoteService()
   })
 
-  it('should display created duties', async () => {
+  it('should display added duties', async () => {
     await dutyRemoteService.addDuty('Sample Duty 1')
     await dutyRemoteService.addDuty('Sample Duty 2')
 
@@ -72,16 +72,16 @@ describe('App', () => {
     expect(savedDuties[1].name).toEqual('New Duty')
   })
 
-  it('should handle error when remote service rejected to create duty', async () => {
+  it('should handle error when remote service rejected to add duty', async () => {
     dutyRemoteService.addDuty = () => {
-      return Promise.reject(new Error('Failed to create duty'))
+      return Promise.reject(new Error('Failed to add duty'))
     }
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
     addDutyViaUI(screen)
 
-    expect(await screen.findByText('Failed to create duty')).toBeVisible()
+    expect(await screen.findByText('Failed to add duty')).toBeVisible()
 
     const savedDuties = await dutyRemoteService.listDuties()
     expect(savedDuties).toHaveLength(0)
