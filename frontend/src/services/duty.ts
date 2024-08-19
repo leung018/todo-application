@@ -2,7 +2,7 @@ import { Duty } from '../models/duty'
 import { myFetch } from './fetch'
 
 export interface DutyRemoteService {
-  createDuty: (name: string) => Promise<Duty>
+  addDuty: (name: string) => Promise<Duty>
   listDuties(): Promise<Duty[]>
   updateDuty: (duty: Duty) => Promise<void>
   completeDuty: (dutyId: string) => Promise<void>
@@ -15,7 +15,7 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
     this.apiEndpoint = apiEndpoint
   }
 
-  async createDuty(name: string) {
+  async addDuty(name: string) {
     return myFetch(`${this.apiEndpoint}/duties`, {
       method: 'POST',
       headers: {
@@ -49,7 +49,7 @@ export class DutyRemoteServiceImpl implements DutyRemoteService {
 export class InMemoryDutyRemoteService implements DutyRemoteService {
   private duties: Duty[] = []
 
-  async createDuty(name: string) {
+  async addDuty(name: string) {
     const duty = { id: `${this.duties.length}`, name }
     this.duties.push(duty)
     return duty

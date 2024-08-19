@@ -42,7 +42,7 @@ const App = ({
     }
 
     return dutyRemoteService
-      .createDuty(dutyName)
+      .addDuty(dutyName)
       .then(() => {
         return loadDutiesFromRemoteToState()
       })
