@@ -29,7 +29,7 @@ const App = ({
     loadDutiesFromRemoteToState()
   }, [loadDutiesFromRemoteToState])
 
-  const handleCreateDuty = async (dutyName: string) => {
+  const handleAddDuty = async (dutyName: string) => {
     if (!dutyName.trim()) {
       messageApi.info('Please input the duty.')
       return
@@ -87,7 +87,7 @@ const App = ({
   return (
     <div style={{ margin: '24px auto', maxWidth: '600px' }}>
       {contextHolder}
-      <DutyInput onCreateDuty={handleCreateDuty} />
+      <DutyInput onAddDuty={handleAddDuty} />
       <DutiesList
         duties={duties}
         onUpdateDuty={handleUpdateDuty}
@@ -98,9 +98,9 @@ const App = ({
 }
 
 const DutyInput = ({
-  onCreateDuty,
+  onAddDuty,
 }: {
-  onCreateDuty: (dutyName: string) => Promise<unknown>
+  onAddDuty: (dutyName: string) => Promise<unknown>
 }) => {
   const [inputValue, setInputValue] = useState('')
   return (
@@ -117,7 +117,7 @@ const DutyInput = ({
         type="primary"
         style={{ marginTop: '5px' }}
         onClick={() => {
-          onCreateDuty(inputValue).then(() => {
+          onAddDuty(inputValue).then(() => {
             setInputValue('')
           })
         }}
