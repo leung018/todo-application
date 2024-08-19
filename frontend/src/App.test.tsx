@@ -29,9 +29,9 @@ describe('App', () => {
     dutyRemoteService = new InMemoryDutyRemoteService()
   })
 
-  it('should display created duties', async () => {
-    await dutyRemoteService.createDuty('Sample Duty 1')
-    await dutyRemoteService.createDuty('Sample Duty 2')
+  it('should display added duties', async () => {
+    await dutyRemoteService.addDuty('Sample Duty 1')
+    await dutyRemoteService.addDuty('Sample Duty 2')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
     expect(await screen.findByText('Sample Duty 1')).toBeVisible()
@@ -49,7 +49,7 @@ describe('App', () => {
   })
 
   it('should able to add duty', async () => {
-    await dutyRemoteService.createDuty('Initial Duty')
+    await dutyRemoteService.addDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
     // If not wait for this and add new duty directly, the test can't cover the behavior of displaying new duty
@@ -72,16 +72,16 @@ describe('App', () => {
     expect(savedDuties[1].name).toEqual('New Duty')
   })
 
-  it('should handle error when remote service rejected to create duty', async () => {
-    dutyRemoteService.createDuty = () => {
-      return Promise.reject(new Error('Failed to create duty'))
+  it('should handle error when remote service rejected to add duty', async () => {
+    dutyRemoteService.addDuty = () => {
+      return Promise.reject(new Error('Failed to add duty'))
     }
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
     addDutyViaUI(screen)
 
-    expect(await screen.findByText('Failed to create duty')).toBeVisible()
+    expect(await screen.findByText('Failed to add duty')).toBeVisible()
 
     const savedDuties = await dutyRemoteService.listDuties()
     expect(savedDuties).toHaveLength(0)
@@ -114,7 +114,7 @@ describe('App', () => {
   })
 
   it('should able to edit duty', async () => {
-    await dutyRemoteService.createDuty('Initial Duty')
+    await dutyRemoteService.addDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
@@ -148,7 +148,7 @@ describe('App', () => {
   })
 
   it('should prevent editing existing duty to empty', async () => {
-    await dutyRemoteService.createDuty('Initial Duty')
+    await dutyRemoteService.addDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
@@ -166,7 +166,7 @@ describe('App', () => {
   })
 
   it('should prevent editing existing duty to very long name', async () => {
-    await dutyRemoteService.createDuty('Initial Duty')
+    await dutyRemoteService.addDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
@@ -188,7 +188,7 @@ describe('App', () => {
   })
 
   it('should able to complete duty', async () => {
-    await dutyRemoteService.createDuty('Initial Duty')
+    await dutyRemoteService.addDuty('Initial Duty')
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
