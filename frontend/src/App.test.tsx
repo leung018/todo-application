@@ -38,6 +38,16 @@ describe('App', () => {
     screen.getByText('Sample Duty 2')
   })
 
+  it('should handle error when remote service rejected to list duties', async () => {
+    dutyRemoteService.listDuties = () => {
+      return Promise.reject(new Error('Failed to list duties'))
+    }
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    expect(await screen.findByText('Failed to list duties')).toBeVisible()
+  })
+
   it('should able to add duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 
@@ -64,14 +74,14 @@ describe('App', () => {
 
   it('should handle error when remote service rejected to create duty', async () => {
     dutyRemoteService.createDuty = () => {
-      return Promise.reject(new Error('Create duty failed'))
+      return Promise.reject(new Error('Failed to create duty'))
     }
 
     render(<App dutyRemoteService={dutyRemoteService} />)
 
     addDutyViaUI(screen)
 
-    expect(await screen.findByText('Create duty failed')).toBeVisible()
+    expect(await screen.findByText('Failed to create duty')).toBeVisible()
 
     const savedDuties = await dutyRemoteService.listDuties()
     expect(savedDuties).toHaveLength(0)
@@ -123,7 +133,7 @@ describe('App', () => {
 
   it('should handle error when remote service rejected to update duty', async () => {
     dutyRemoteService.updateDuty = () => {
-      return Promise.reject(new Error('Update duty failed'))
+      return Promise.reject(new Error('Failed to update duty'))
     }
 
     render(<App dutyRemoteService={dutyRemoteService} />)
@@ -134,7 +144,7 @@ describe('App', () => {
       originalName: 'Duty',
     })
 
-    expect(await screen.findByText('Update duty failed')).toBeVisible()
+    expect(await screen.findByText('Failed to update duty')).toBeVisible()
   })
 
   it('should prevent editing existing duty to empty', async () => {
@@ -193,7 +203,7 @@ describe('App', () => {
 
   it('should handle error when remote service rejected to complete duty', async () => {
     dutyRemoteService.completeDuty = () => {
-      return Promise.reject(new Error('Complete duty failed'))
+      return Promise.reject(new Error('Failed to complete duty'))
     }
 
     render(<App dutyRemoteService={dutyRemoteService} />)
@@ -202,7 +212,7 @@ describe('App', () => {
     const completeButton = await screen.findByTestId('complete-button-0')
     fireEvent.click(completeButton)
 
-    expect(await screen.findByText('Complete duty failed')).toBeVisible()
+    expect(await screen.findByText('Failed to complete duty')).toBeVisible()
   })
 
   function addDutyViaUI(

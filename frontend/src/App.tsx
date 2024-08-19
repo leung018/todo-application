@@ -15,10 +15,15 @@ const App = ({
   const [messageApi, contextHolder] = message.useMessage()
 
   const loadDutiesFromRemoteToState = useCallback(async () => {
-    return dutyRemoteService.listDuties().then((duties) => {
-      setDuties([...duties])
-    })
-  }, [dutyRemoteService])
+    return dutyRemoteService
+      .listDuties()
+      .then((duties) => {
+        setDuties([...duties])
+      })
+      .catch((error) => {
+        messageApi.error(error.message)
+      })
+  }, [dutyRemoteService, messageApi])
 
   useEffect(() => {
     loadDutiesFromRemoteToState()
