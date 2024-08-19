@@ -38,6 +38,16 @@ describe('App', () => {
     screen.getByText('Sample Duty 2')
   })
 
+  it('should handle error when remote service rejected to list duties', async () => {
+    dutyRemoteService.listDuties = () => {
+      return Promise.reject(new Error('Failed to list duties'))
+    }
+
+    render(<App dutyRemoteService={dutyRemoteService} />)
+
+    expect(await screen.findByText('Failed to list duties')).toBeVisible()
+  })
+
   it('should able to add duty', async () => {
     await dutyRemoteService.createDuty('Initial Duty')
 
