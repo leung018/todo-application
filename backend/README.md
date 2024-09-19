@@ -18,7 +18,7 @@ TypeScript, Node.js, Express.js, PostgreSQL
 
 ## Testing strategy
 
-Have unit tests that don't involve external dependencies and integration tests that involve PostgreSQL. See [Useful Commands](#useful-commands) for how to run them.
+This project includes unit tests that don't involve external dependencies and integration tests that involve PostgreSQL. See [Useful Commands](#useful-commands) for how to run them.
 
 ### Explanation for `createNull` or `createTestInstance` convention
 
