@@ -20,11 +20,17 @@ TypeScript, Node.js, Express.js, PostgreSQL
 
 Have unit tests that don't involve external dependencies and integration tests that involve PostgreSQL. See [Useful Commands](#useful-commands) for how to run them.
 
-### Explanation for `createNull` convention
+### Explanation for `createNull` or `createTestInstance` convention
 
-In this project, some classes have creation methods like `Xyz.create` and `Xyz.createNull` respectively. It is a pattern learnt from [Testing Without Mocks: A Pattern Language](https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks) by James Shore.
+In this project, some classes have creation methods like `<ClassName>.create...`, `<ClassName>.createNull...` or `<ClassName>.createTestInstance` respectively. They are patterns learnt from [Testing Without Mocks: A Pattern Language](https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks) by James Shore.
 
-`Xyz.create` is the creation method for production code. `Xyz.createNull` is the creation method for testing side that support parameterless instantiation and provided some fake implementation for some external dependencies to enhance testability and maintainability of unit test test cases. See [Nullable Pattern](https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks#nullables) for more details.
+`create...` is the creation method for production code.
+
+`createNull...` is the creation method that can be used in testing side to support parameterless instantiation and provide some fake implementation for some external dependencies to enhance testability and maintainability of unit test test cases. It creates a “Nulled” instance that disables all external communication, but behaves normally in every other respect.
+
+`createTestInstance` is the creation method of entity or value objects in testing side that support parameterized instantiation. It is not expected to be called in production code while `createNull...` might be used in production code when building a prototype.
+
+See [Nullable](https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks#nullables) and [Parameterless Instantiation](https://www.jamesshore.com/v2/projects/nullables/testing-without-mocks#instantiation) for more details.
 
 ## Local Development
 
