@@ -28,8 +28,8 @@ describe('PostgresDutyRepository', () => {
   })
 
   it('should list created duties same as order they added', async () => {
-    const duty1 = Duty.createNull({ name: 'duty Z' })
-    const duty2 = Duty.createNull({ name: 'duty X' })
+    const duty1 = Duty.createTestInstance({ name: 'duty Z' })
+    const duty2 = Duty.createTestInstance({ name: 'duty X' })
 
     await repo.create(duty1)
     await repo.create(duty2)
@@ -39,8 +39,8 @@ describe('PostgresDutyRepository', () => {
   })
 
   it('should deleteAllDuties remove created duties', async () => {
-    const duty1 = Duty.createNull()
-    const duty2 = Duty.createNull()
+    const duty1 = Duty.createTestInstance()
+    const duty2 = Duty.createTestInstance()
 
     await repo.create(duty1)
     await repo.create(duty2)
@@ -52,7 +52,7 @@ describe('PostgresDutyRepository', () => {
   })
 
   it('should update duty', async () => {
-    const duty = Duty.createNull({ name: 'Original Name' })
+    const duty = Duty.createTestInstance({ name: 'Original Name' })
     await repo.create(duty)
 
     duty.name = 'Updated Duty Name'
@@ -63,14 +63,14 @@ describe('PostgresDutyRepository', () => {
   })
 
   it('should throw error when updating non-existing duty', async () => {
-    await expect(repo.update(Duty.createNull())).rejects.toThrow(
+    await expect(repo.update(Duty.createTestInstance())).rejects.toThrow(
       EntityNotFoundError,
     )
   })
 
   it('should delete duty', async () => {
-    const duty1 = Duty.createNull()
-    const duty2 = Duty.createNull()
+    const duty1 = Duty.createTestInstance()
+    const duty2 = Duty.createTestInstance()
 
     await repo.create(duty1)
     await repo.create(duty2)
@@ -82,7 +82,7 @@ describe('PostgresDutyRepository', () => {
   })
 
   it('should throw error when deleting non-existing duty', async () => {
-    const duty = await Duty.createNull()
+    const duty = await Duty.createTestInstance()
     await expect(repo.deleteDuty(duty.id)).rejects.toThrow(EntityNotFoundError)
   })
 
