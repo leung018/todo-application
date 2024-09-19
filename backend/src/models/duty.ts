@@ -11,7 +11,7 @@ export class Duty {
     return new Duty({ id: uuidv4(), name })
   }
 
-  static createNull({ name = 'Name of Duty' } = {}): Duty {
+  static createTestInstance({ name = 'Name of Duty' } = {}): Duty {
     return Duty.create({ name })
   }
 
