@@ -1,6 +1,6 @@
-# Todo-toy-project
+# Todo-application
 
-A simple todo toy application for todo duties management that can add/edit/complete the duties.
+A full stack application for todo duties management that can add/edit/complete the duties.
 
 ## How to run
 
